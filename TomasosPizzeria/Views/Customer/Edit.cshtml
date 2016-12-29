@@ -1,0 +1,107 @@
+﻿@model TomasosPizzeria.ViewModels.LoggedInModel
+
+@{
+    Layout = "_LoggedIn";
+}
+
+<div class="container">
+
+    <div class="col-md-offset-2 col-md-6" id="createForm">
+
+        <div class="jumbotron text-center">
+            <h3>Redigera dina uppgifter</h3>
+        </div>
+
+
+        <form asp-action="SaveChanges" asp-controller="Customer" class="form-horizontal">
+            
+            <input asp-for="Kund.KundId" type="hidden" value="@Model.Kund.KundId"/>
+
+            <div class="form-group">
+                <div class="col-sm-3 text-right">*<label class="control-label" asp-for="Kund.Namn"></label>:</div>
+                <div class="col-sm-9 text-center">
+                    <input asp-for="Kund.Namn" class="form-control" value="@Model.Kund.Namn" />
+                    <span asp-validation-for="Kund.Namn"></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-3 text-right"><label class="control-label" asp-for="Kund.Email"></label>:</div>
+                <div class="col-sm-9 text-center">
+                    <input asp-for="Kund.Email" class="form-control" value="@Model.Kund.Email"/>
+                    <span asp-validation-for="Kund.Email"></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-3 text-right">*<label class="control-label" asp-for="Kund.Gatuadress"></label>:</div>
+                <div class="col-sm-9 text-center">
+                    <input asp-for="Kund.Gatuadress" class="form-control" value="@Model.Kund.Gatuadress"/>
+                    <span asp-validation-for="Kund.Gatuadress"></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-3 text-right">*<label class="control-label" asp-for="Kund.Postnr"></label>:</div>
+                <div class="col-sm-9 text-center">
+                    <input asp-for="Kund.Postnr" class="form-control" value="@Model.Kund.Postnr"/>
+                    <span asp-validation-for="Kund.Postnr"></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-3 text-right">*<label class="control-label" asp-for="Kund.Postort"></label>:</div>
+                <div class="col-sm-9 text-center">
+                    <input asp-for="Kund.Postort" class="form-control" value="@Model.Kund.Postort"/>
+                    <span asp-validation-for="Kund.Postort"></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-3 text-right"><label class="control-label" asp-for="Kund.Telefon"></label>:</div>
+                <div class="col-sm-9 text-center">
+                    <input asp-for="Kund.Telefon" class="form-control" value="@Model.Kund.Telefon"/>
+                    <span asp-validation-for="Kund.Telefon"></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-3 text-right">*<label class="control-label" asp-for="Kund.AnvandarNamn"></label>:</div>
+                <div class="col-sm-9 text-center">
+                    <input asp-for="Kund.AnvandarNamn" class="form-control" value="@Model.Kund.AnvandarNamn"/>
+                    <span asp-validation-for="Kund.AnvandarNamn"></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-3 text-right">*<label class="control-label" asp-for="Kund.Losenord"></label>:</div>
+                <div class="col-sm-9 text-center">
+                    <input asp-for="Kund.Losenord" class="form-control" type="text" value="@Model.Kund.Losenord"/>
+                    <span asp-validation-for="Kund.Losenord"></span>
+                </div>
+            </div>
+
+            <div class="input-group center-block" id="btnCreate">
+                <button class="btn btn-login-form" type="submit">Spara Ändringar</button>
+            </div>
+        </form>
+        <div class="input-group" id="btnBack">
+            <a asp-controller="Customer" asp-action="Index" asp-route-id="@Model.Kund.KundId"><button class="btn btn-default">Avbryt</button></a>
+
+        </div>
+        <div class="form-group text-center">
+            @if (ViewBag.username != null)
+            {
+                <label class="field-validation-error">@ViewBag.username</label> <br />
+            }
+            @if (ViewBag.email != null)
+            {
+                <label class="field-validation-error">@ViewBag.email</label>
+            }
+            @if (TempData["success"] != null)
+            {
+                <label class="alert-success">@TempData["success"]<i class="glyphicon glyphicon-check"></i></label>
+            }
+        </div>
+    </div>
+</div>

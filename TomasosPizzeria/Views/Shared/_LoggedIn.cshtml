@@ -1,0 +1,141 @@
+﻿@model TomasosPizzeria.ViewModels.LoggedInModel
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - TomasosPizzeria</title>
+
+    <environment names="Development">
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+        <link rel="stylesheet" href="~/css/site.css" />
+    </environment>
+    <environment names="Staging,Production">
+        <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.6/css/bootstrap.min.css"
+              asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
+              asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
+        <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
+    </environment>
+    @Html.ApplicationInsightsJavaScript(TelemetryConfiguration)
+    <link href="https://fonts.googleapis.com/css?family=Bilbo|Raleway" rel="stylesheet">
+</head>
+<body>
+
+    <div class="header">
+        <div class="container">
+            <div class="col-md-8">
+                <a asp-controller="Customer" asp-action="Index" asp-route-id="@Model.Kund.KundId"><h1 class="tomasos-header">Tomasos Pizzeria</h1></a>
+                <h2 class="tomasos-quote">Italienska pizzor bakade med kärlek</h2>
+            </div>
+        </div>
+    </div>
+
+    <nav class="navbar navbar-default main-nav">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" asp-controller="Customer" asp-action="Index" asp-route-id="@Model.Kund.KundId">Hem</a>
+            </div>
+            <ul class="nav navbar-nav">
+                <li><a asp-controller="Customer" asp-action="LogOut">Logga ut</a></li>
+                <li><a asp-controller="Customer" asp-action="Edit" asp-route-id="@Model.Kund.KundId">Redigera profil</a></li>
+            </ul>
+            <!-- Trigger the modal with a button -->
+            <button class="btn navbar-btn btn-create pull-right" data-toggle="modal" data-target="#shoppingCart">Varukorg</button>
+        </div>
+    </nav>
+
+
+
+    <!-- Modal -->
+    <div id="shoppingCart" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title text-center">Varukorg</h3>
+                    <h4 class="text-center">Klicka på krysset för att ta bort en vara</h4>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-striped">
+                        @foreach (var food in @Model.ShoppingCart)
+                        {
+                            <tr>
+                                <td class="text-center">
+                                    <form class="navbar-form" asp-controller="Customer" asp-action="RemoveFromCart">
+                                        <input type="hidden" name="foodId" value="@food.MatrattId" />
+                                        <input type="hidden" name="customerId" value="@Model.Kund.KundId" />
+                                        @foreach (var item in @Model.ShoppingCart)
+                                        {
+                                            <input type="hidden" name="shoppingCart" value="@item.MatrattId" />
+                                        }
+                                        <button type="submit" class="btn btn-xs navbar-btn"><i class="glyphicon glyphicon-remove"></i></button>
+                                    </form>
+                                </td>
+                                <td id="food-cell">
+                                    @food.MatrattNamn
+                                </td>
+                                <td>@food.Pris Kr</td>
+                            </tr>
+                        }
+                    </table>
+                    <hr />
+                    @{
+                        var orderTotal = 0;
+                    }
+                    @foreach (var food in @Model.ShoppingCart)
+                    {
+                        orderTotal += food.Pris;
+                    }
+                    @{
+                        var resultString = "Ordertotal: " + orderTotal + "Kr";
+                    }
+                    <h1 class="text-center">@resultString</h1>
+
+                </div>
+                <div class="modal-footer">
+                    <div class="input-group"><button type="button" class="btn btn-default" data-dismiss="modal">Stäng</button></div>
+                    <form asp-controller="Customer" asp-action="SendOrder" method="post">
+                        <input type="hidden" name="customerId" value="@Model.Kund.KundId"/>
+                        @foreach (var item in @Model.ShoppingCart)
+                        {
+                            <input type="hidden" name="shoppingCart" value="@item.MatrattId"/>
+                        }
+                        <button type="submit" class="btn btn-success">Skicka beställning</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid main">
+        <div class="container body-content">
+            @RenderBody()
+            <hr />
+            <footer>
+                <p>&copy; 2016 - TomasosPizzeria</p>
+            </footer>
+        </div>
+    </div>
+
+    <environment names="Development">
+        <script src="~/lib/jquery/dist/jquery.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+        <script src="~/js/site.js" asp-append-version="true"></script>
+    </environment>
+    <environment names="Staging,Production">
+        <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.2.0.min.js"
+                asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
+                asp-fallback-test="window.jQuery">
+        </script>
+        <script src="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.6/bootstrap.min.js"
+                asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.min.js"
+                asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal">
+        </script>
+        <script src="~/js/site.min.js" asp-append-version="true"></script>
+    </environment>
+
+    @RenderSection("scripts", required: false)
+</body>
+</html>

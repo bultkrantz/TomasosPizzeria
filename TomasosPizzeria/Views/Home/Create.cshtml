@@ -1,0 +1,108 @@
+﻿@model TomasosPizzeria.Models.Kund
+
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+<div class="container">
+
+    <div class="col-md-offset-2 col-md-6" id="createForm">
+
+        <div class="jumbotron text-center">
+            <h3>Fyll i alla uppgifter för att skapa en ny användare</h3>
+        </div>
+
+
+        <form asp-action="Create" asp-controller="Home" data-ajax="true" class="form-horizontal">
+
+            <div class="form-group">
+                <div class="col-sm-3 text-right">*<label class="control-label" asp-for="Namn"></label>:</div>
+                <div class="col-sm-9 text-center">
+                    <input asp-for="Namn" class="form-control" />
+                    <span asp-validation-for="Namn"></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-3 text-right"><label class="control-label" asp-for="Email"></label>:</div>
+                <div class="col-sm-9 text-center">
+                    <input asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email"></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-3 text-right">*<label class="control-label" asp-for="Gatuadress"></label>:</div>
+                <div class="col-sm-9 text-center">
+                    <input asp-for="Gatuadress" class="form-control" />
+                    <span asp-validation-for="Gatuadress"></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-3 text-right">*<label class="control-label" asp-for="Postnr"></label>:</div>
+                <div class="col-sm-9 text-center">
+                    <input asp-for="Postnr" class="form-control" />
+                    <span asp-validation-for="Postnr"></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-3 text-right">*<label class="control-label" asp-for="Postort"></label>:</div>
+                <div class="col-sm-9 text-center">
+                    <input asp-for="Postort" class="form-control" />
+                    <span asp-validation-for="Postort"></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-3 text-right"><label class="control-label" asp-for="Telefon"></label>:</div>
+                <div class="col-sm-9 text-center">
+                    <input asp-for="Telefon" class="form-control" />
+                    <span asp-validation-for="Telefon"></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-3 text-right">*<label class="control-label" asp-for="AnvandarNamn"></label>:</div>
+                <div class="col-sm-9 text-center">
+                    <input asp-for="AnvandarNamn" class="form-control" />
+                    <span asp-validation-for="AnvandarNamn"></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-3 text-right">*<label class="control-label" asp-for="Losenord"></label>:</div>
+                <div class="col-sm-9 text-center">
+                    <input asp-for="Losenord" class="form-control" />
+                    <span asp-validation-for="Losenord"></span>
+                </div>
+            </div>
+
+            <div class="input-group center-block" id="btnCreate">
+                <button class="btn btn-login-form" type="submit">Skapa användare</button>
+            </div>
+        </form>
+        <div class="input-group" id="btnBack">
+            <a asp-controller="Home" asp-action="Index"><button class="btn btn-default">tillbaka</button></a>
+
+        </div>
+        <div class="form-group text-center">
+            @if (ViewBag.username != null)
+            {
+                <label class="field-validation-error">@ViewBag.username</label> <br />
+            }
+            @if (ViewBag.email != null)
+            {
+                <label class="field-validation-error">@ViewBag.email</label>
+            }
+            @if (TempData["success"] != null)
+            {
+                <label class="alert-success">@TempData["success"]<i class="glyphicon glyphicon-check"></i></label>
+            }
+        </div>
+    </div>
+</div>
+

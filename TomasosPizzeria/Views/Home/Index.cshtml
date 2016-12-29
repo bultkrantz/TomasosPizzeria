@@ -1,0 +1,85 @@
+﻿@model TomasosPizzeria.Models.Kund
+
+@{
+    Layout = "_Layout";
+}
+
+
+<div class="jumbotron">
+    <h1>Välkommen till tomasos pizzeria</h1>
+    <h2>Nedanför hittar du våran meny</h2>
+
+   <p class="pull-right">För att beställa måste du <a asp-controller="Home" asp-action="Login">logga in</a></p>
+</div>
+
+<div class="container">
+    <div class="col-md-4">
+        <h2>Pizza</h2>
+        <div class="table">
+            <table class="table table-striped table-bordered">
+                <thead>
+                <tr>
+                    <th>Namn</th>
+                    <th>Beskrivning</th>
+                    <th>Pris</th>
+                </tr>
+                </thead>
+                @foreach (var dish in @ViewBag.pizza)
+                {
+                    <tr>
+                        <td>@dish.MatrattNamn</td>
+                        <td>@dish.Beskrivning</td>
+                        <td>@dish.Pris</td>
+                    </tr>
+                }
+            </table>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <h2>Pasta</h2>
+        <div class="table">
+            <table class="table table-striped table-bordered">
+                <thead>
+                <tr>
+                    <th>Namn</th>
+                    <th>Beskrivning</th>
+                    <th>Pris</th>
+                </tr>
+                </thead>
+                @foreach (var dish in @ViewBag.pasta)
+                {
+                    <tr>
+                        <td>@dish.MatrattNamn</td>
+                        <td>@dish.Beskrivning</td>
+                        <td>@dish.Pris</td>
+                    </tr>
+                }
+            </table>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <h2>Sallad</h2>
+        <div class="table">
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>Namn</th>
+                        <th>Beskrivning</th>
+                        <th>Pris</th>
+                    </tr>
+                </thead>
+                @foreach (var dish in @ViewBag.sallad)
+                {
+                    <tr>
+                        <td>@dish.MatrattNamn</td>
+                        <td>@dish.Beskrivning</td>
+                        <td>@dish.Pris</td>
+                    </tr>
+                }
+            </table>
+        </div>
+    </div>
+</div>
+

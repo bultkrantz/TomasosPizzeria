@@ -1,0 +1,12 @@
+﻿@model TomasosPizzeria.ViewModels.LoggedInModel
+
+
+@{
+    Layout = "_LoggedIn";
+}
+<div class="jumbotron">
+    <h2>Välkommn @Model.Kund.Namn</h2>
+    <p>Nedanför hittar du våran meny, klicka på en maträtt för att lägga till den i din varukorg</p>
+</div>
+
+@Html.Partial("_OrderMenu", Model)
