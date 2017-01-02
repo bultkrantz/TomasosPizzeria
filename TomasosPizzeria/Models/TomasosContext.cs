@@ -50,7 +50,7 @@ namespace TomasosPizzeria.Models
                 entity.HasOne(d => d.Bestallning)
                     .WithMany(p => p.BestallningMatratt)
                     .HasForeignKey(d => d.BestallningId)
-                    .OnDelete(DeleteBehavior.Restrict)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_BestallningMatratt_Bestallning");
 
                 entity.HasOne(d => d.Matratt)
@@ -122,7 +122,7 @@ namespace TomasosPizzeria.Models
                 entity.HasOne(d => d.Matratt)
                     .WithMany(p => p.MatrattProdukt)
                     .HasForeignKey(d => d.MatrattId)
-                    .OnDelete(DeleteBehavior.Restrict)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_MatrattProdukt_Matratt");
 
                 entity.HasOne(d => d.Produkt)

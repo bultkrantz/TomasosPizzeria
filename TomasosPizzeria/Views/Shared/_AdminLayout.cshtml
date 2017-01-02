@@ -1,0 +1,76 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - TomasosPizzeria</title>
+
+    <environment names="Development">
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+        <link rel="stylesheet" href="~/css/site.css" />
+    </environment>
+    <environment names="Staging,Production">
+        <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.6/css/bootstrap.min.css"
+              asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
+              asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
+        <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
+    </environment>
+    @Html.ApplicationInsightsJavaScript(TelemetryConfiguration)
+    <link href="https://fonts.googleapis.com/css?family=Bilbo|Raleway" rel="stylesheet">
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <div class="col-md-8">
+                <a asp-controller="Admin" asp-action="Index"><h1 class="tomasos-header">Tomasos Pizzeria</h1></a>
+                <h2 class="tomasos-quote">Italienska pizzor bakade med kärlek</h2>
+            </div>
+        </div>
+    </div>
+
+    <nav class="navbar navbar-default main-nav">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" asp-controller="Admin" asp-action="Index">Tomasos</a>
+            </div>
+            <ul class="nav navbar-nav">
+                <li><a asp-controller="RoleAdmin" asp-action="Index">Hantera konton</a></li>
+                <li><a asp-controller="Admin" asp-action="Orders">Hantera Ordrar</a></li>
+                <li><a asp-controller="Food" asp-action="CreateFood">Skapa maträtt</a></li>
+                <li><a asp-controller="Food" asp-action="CreateIngredient">Redigera ingredienser</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a asp-controller="Account" asp-action="Logout">Logga ut</a></li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container-fluid main">
+        <div class="container body-content">
+            @RenderBody()
+            <hr />
+            <footer>
+                <p>&copy; 2016 - TomasosPizzeria</p>
+            </footer>
+        </div>
+    </div>
+
+    <environment names="Development">
+        <script src="~/lib/jquery/dist/jquery.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+        <script src="~/js/site.js" asp-append-version="true"></script>
+    </environment>
+    <environment names="Staging,Production">
+        <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.2.0.min.js"
+                asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
+                asp-fallback-test="window.jQuery">
+        </script>
+        <script src="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.6/bootstrap.min.js"
+                asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.min.js"
+                asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal">
+        </script>
+        <script src="~/js/site.min.js" asp-append-version="true"></script>
+    </environment>
+
+    @RenderSection("scripts", required: false)
+</body>
+</html>

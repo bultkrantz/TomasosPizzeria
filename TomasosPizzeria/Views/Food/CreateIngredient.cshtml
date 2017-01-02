@@ -1,0 +1,44 @@
+﻿@model EditIngredientModel
+
+@{
+    Layout = "_AdminLayout";
+}
+
+@if (@TempData["success"] != null)
+            {
+    <div class="container-fluid text-center">
+        <span id="ingredient-success" class="alert-success">@TempData["success"]</span>
+    </div>
+}
+<div class="row">
+    <div class="col-md-6">
+        <div class="text-center">
+
+            <h2>Skapa ingrediens</h2>
+        </div>
+        <form asp-action="Createingredient" method="post">
+            <div class="form-group">
+                <label asp-for="Produkt.ProduktNamn">Ingrediensens namn</label>
+                <input class="form-control" asp-for="Produkt.ProduktNamn" />
+                <span asp-validation-for="Produkt.ProduktNamn"></span>
+            </div>
+            <hr />
+            <button class="btn btn-success" type="submit">Skapa</button>
+            <a asp-action="Index" asp-controller="Admin" class="btn btn btn-default">Tillbaka</a>
+        </form>
+    </div>
+    <div class="col-md-6">
+        <div class="text-center">
+            <h2>Ta bort ingredienser</h2>
+        </div>
+        <form asp-action="DeleteIngredient">
+            <div id="ingredient-form" class="form-group">
+                @foreach (var i in @ViewBag.products)
+                {
+                    <label class="checkbox-inline"><input type="checkbox" name="produkter" value="@i.ProduktId" />@i.ProduktNamn</label>
+                }
+            </div>
+            <button type="submit" class="btn btn-danger">Ta bort markerade</button>
+        </form>
+    </div>
+</div>

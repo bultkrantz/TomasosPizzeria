@@ -1,0 +1,48 @@
+﻿@model FoodModel
+
+@{
+    Layout = "_AdminLayout";
+}
+
+<div class="row">
+    <div class="col-md-8 col-md-offset-2">
+        <div class="text-center">
+            <h2>Skapa maträtt</h2>
+        </div>
+        <form asp-action="CreateFood" method="post">
+            <div class="form-group">
+                <div class="form-group">
+                    <label asp-for="Matratt.MatrattNamn">Namn</label>
+                    <input class="form-control" asp-for="Matratt.MatrattNamn" />
+                    <span asp-validation-for="Matratt.MatrattNamn"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Matratt.Beskrivning"></label>
+                    <input class="form-control" asp-for="Matratt.Beskrivning" />
+                    <span asp-validation-for="Matratt.Beskrivning"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Matratt.Pris"></label>
+                    <input class="form-control" asp-for="Matratt.Pris" />
+                    <span asp-validation-for="Matratt.Pris"></span>
+                </div>
+             
+                    <label>Välj Kategori</label>
+                    <br />
+                    <select class="form-control" asp-for="Matratt.MatrattTyp" asp-items="@ViewBag.categories"></select>
+              
+                <hr />
+                <h4>Ingredienser - Markera de ingredienser rätten innehåller</h4>
+                <div id="ingredient-form" class="form-group">
+                    @foreach (var ingredient in @ViewBag.products)
+                    {
+                        <label class="checkbox-inline"><input type="checkbox" value="@ingredient.ProduktId" name="productId">@ingredient.ProduktNamn</label>
+                    }
+                </div>
+            </div>
+            <hr />
+            <button class="btn btn-success" type="submit">Skapa</button>
+            <a asp-action="Index" asp-controller="Admin" class="btn btn btn-default">Tillbaka</a>
+        </form>
+    </div>
+</div>

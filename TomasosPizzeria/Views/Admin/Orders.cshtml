@@ -1,0 +1,44 @@
+﻿@model List<TomasosPizzeria.Models.Bestallning>
+
+@{
+    Layout = "_AdminLayout";
+}
+
+<div class="bg-primary panel-body"><h4>Ordrar</h4></div>
+<table class="table table-condensed table-bordered">
+    <tr><th>Kund ID</th><th>Beställnings ID</th><th>Datum</th><th>Totalbelopp</th><th>Status</th></tr>
+    @if (Model.Count() == 0)
+    {
+        <tr><td colspan="3" class="text-center">Det finns inga ordrar</td></tr>
+    }
+    else
+    {
+        foreach (Bestallning b in Model)
+        {
+            <tr>
+                <td>@b.KundId</td>
+                <td>@b.BestallningId</td>
+                <td>@b.BestallningDatum</td>
+                <td>@b.Totalbelopp</td>
+                @if (b.Levererad)
+                {
+                    <td>Levererad<a class="btn btn-sm btn-primary pull-right" asp-action="EditOrder" asp-route-id="@b.BestallningId">Byt status</a></td>
+                }
+                else
+                {
+                    <td>Ej levererad<a class="btn btn-sm btn-primary pull-right" asp-action="EditOrder" asp-route-id="@b.BestallningId">Byt status</a></td>
+
+                }
+                <td>
+                    <form asp-action="DeleteOrder" asp-route-id="@b.BestallningId" method="post">
+                        <button type="submit"
+                                class="btn btn-sm btn-danger">
+                            Delete
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        }
+    }
+</table>
+

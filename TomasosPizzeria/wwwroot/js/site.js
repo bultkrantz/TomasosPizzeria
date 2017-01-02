@@ -36,4 +36,22 @@ if ($('#success-div').length) {
         3000);
 }
 
+//Flimmering message on successful add of ingredient
+
+var $successSpan = $("#ingredient-success");
+//var backgroundInterval = setInterval(function() {
+//        $successDiv.toggleClass("flimmer");
+//    },
+//    100);
+
+if ($successSpan.length) {
+    setInterval(function () {
+        $successSpan.toggleClass("flimmer");
+    },
+ 500);
+    setTimeout(function () {
+        $successSpan.remove();
+    },
+        3000);
+}
 

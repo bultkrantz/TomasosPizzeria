@@ -162,7 +162,7 @@ form {
     transition: 0.5s;
 }
 
-.btn-default {
+#customer-login-btn {
     transition: 0.5s;
     width: 100%;
 }
@@ -217,6 +217,28 @@ form {
     transition: background 0.3s ease-in-out;
 }
 
+#ingredient-success {
+    -webkit-transition: background 0.3s ease-in-out;
+    -ms-transition: background 0.3s ease-in-out;
+    transition: background 0.3s ease-in-out;
+}
+
 .flimmer {
     background-color: transparent;
 }
+
+/*---- ShoppingCart mesage on success ----*/
+td form {
+    margin: 0 0;
+}
+
+/*---- Edit foods form ----*/
+#ingredient-form .checkbox-inline {
+    margin-left: 10px !important;
+}
+
+/*---- Edit ingredients form ----*/
+#ingredient-success {
+    font-size: 30px;
+}
+

@@ -1,4 +1,4 @@
-﻿@model TomasosPizzeria.Models.Kund
+﻿
 
 <!DOCTYPE html>
 <html>
@@ -37,8 +37,11 @@
                 <a class="navbar-brand" asp-controller="Home" asp-action="Index">Tomasos</a>
             </div>
             <ul class="nav navbar-nav">
-                <li><a asp-controller="Home" asp-action="Login">Logga in</a></li>
+                <li><a asp-controller="Account" asp-action="Login">Logga in</a></li>
                 <li><a asp-controller="Home" asp-action="Create">Skapa Konto</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a asp-controller="Account" asp-action="LoginAdmin">Logga in som admin</a></li>
             </ul>
         </div>
     </nav>

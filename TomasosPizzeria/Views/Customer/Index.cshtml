@@ -1,6 +1,4 @@
 ﻿@model TomasosPizzeria.ViewModels.LoggedInModel
-
-
 @{
     Layout = "_LoggedIn";
 }
@@ -8,7 +6,7 @@
 @if (TempData["success"] == null)
 {
     <div class="jumbotron">
-        <h2>Du är inloggad som @Model.Kund.Namn</h2>
+        <h2>Välkommen till Tomasos @Model.Customer.Namn</h2>
         <p>Nedanför hittar du våran meny, klicka på en maträtt för att lägga till den i din varukorg</p>
     </div>
 }
@@ -19,6 +17,5 @@ else
         <h2 id="success-div" class="alert-success">@TempData["success"]</h2>
     </div>
 }
-
 
 @Html.Partial("_OrderMenu", Model)

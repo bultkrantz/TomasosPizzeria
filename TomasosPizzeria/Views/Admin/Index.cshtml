@@ -1,0 +1,156 @@
+﻿@using System.Runtime.InteropServices.ComTypes
+@using Microsoft.CodeAnalysis.CSharp.Syntax
+@model LoggedInModelAdmin
+@{
+    Layout = "_AdminLayout";
+}
+@if (@TempData["success"] != null)
+            {
+    <div class="container-fluid text-center">
+        <span id="ingredient-success" class="alert-success flimmer">@TempData["success"]</span>
+    </div>
+}
+
+<div class="jumbotron">
+    <h2>Välkommen tillbaka @ViewBag.user</h2>
+
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <h2 class="text-center">Pizza</h2>
+    <table class="table table-bordered table-striped">
+            <tr>
+                <th>Namn</th>
+                <th>Beskrivnings</th>
+                <th>Ingredienser</th>
+                <th>Pris</th>
+            </tr>
+            @foreach (var pizza in @Model.Pizza)
+            {
+                <tr>
+                    <td>@pizza.Matratt.MatrattNamn</td>
+                    <td>@pizza.Matratt.Beskrivning</td>
+                    <td>
+                        @for (var index = 0; index < pizza.Produkter.Count; index++)
+                        {
+                            var produkt = pizza.Produkter[index];
+                            if (index < pizza.Produkter.Count - 1)
+                            {
+                                var s = produkt.ProduktNamn + ", ";
+                                @s
+                            }
+                            else
+                            {
+                                @produkt.ProduktNamn
+                            }
+                        }
+                    </td>
+                    <td>
+                        @pizza.Matratt.Pris
+                    </td>
+                    <td>
+                        <a class="btn-sm btn-info" asp-action="Edit" asp-controller="Food" asp-route-id="@pizza.Matratt.MatrattId">Edit</a>
+                    </td>
+                    <td>
+                        <a class="btn-sm btn-danger" asp-action="Delete" asp-controller="Food" asp-route-id="@pizza.Matratt.MatrattId">Delete</a>
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+
+    <div class="col-md-6">
+        <div class="text-center">
+            <h2 class="text-center">pasta</h2>
+        </div>
+        <table class="table table-bordered table-striped">
+            <tr>
+                <th>Namn</th>
+                <th>Beskrivnings</th>
+                <th>Ingredienser</th>
+                <th>Pris</th>
+            </tr>
+            @foreach (var pasta in @Model.Pasta)
+            {
+                <tr>
+                    <td>@pasta.Matratt.MatrattNamn</td>
+                    <td>@pasta.Matratt.Beskrivning</td>
+                    <td>
+                        @for (var index = 0; index < pasta.Produkter.Count; index++)
+                        {
+                            var produkt = pasta.Produkter[index];
+                            if (index < pasta.Produkter.Count - 1)
+                            {
+                                var s = produkt.ProduktNamn + ", ";
+                                @s
+                            }
+                            else
+                            {
+                                @produkt.ProduktNamn
+                            }
+                        }
+                    </td>
+                    <td>
+                        @pasta.Matratt.Pris
+                    </td>
+                    <td>
+                        <a class="btn-sm btn-info" asp-action="Edit" asp-controller="Food" asp-route-id="@pasta.Matratt.MatrattId">Edit</a>
+                    </td>
+                    <td>
+                        <a class="btn-sm btn-danger" asp-action="Delete" asp-controller="Food" asp-route-id="@pasta.Matratt.MatrattId">Delete</a>
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="text-center">
+            <h2 class="text-center">Sallad</h2>
+        </div>
+        <table class="table table-bordered table-striped">
+            <tr>
+                <th>Namn</th>
+                <th>Beskrivnings</th>
+                <th>Ingredienser</th>
+                <th>Pris</th>
+            </tr>
+            @foreach (var sallad in @Model.Sallad)
+            {
+                <tr>
+                    <td>@sallad.Matratt.MatrattNamn</td>
+                    <td>@sallad.Matratt.Beskrivning</td>
+                    <td>
+                        @for (var index = 0; index < sallad.Produkter.Count; index++)
+                        {
+                            var produkt = sallad.Produkter[index];
+                            if (index < sallad.Produkter.Count - 1)
+                            {
+                                var s = produkt.ProduktNamn + ", ";
+                                @s
+                            }
+                            else
+                            {
+                                @produkt.ProduktNamn
+                            }
+                        }
+                    </td>
+                    <td>
+                        @sallad.Matratt.Pris
+                    </td>
+                    <td>
+                        <a class="btn-sm btn-info" asp-action="Edit" asp-controller="Food" asp-route-id="@sallad.Matratt.MatrattId">Edit</a>
+                    </td>
+                    <td>
+                        <a class="btn-sm btn-danger" asp-action="Delete" asp-controller="Food" asp-route-id="@sallad.Matratt.MatrattId">Delete</a>
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+</div>
+
+

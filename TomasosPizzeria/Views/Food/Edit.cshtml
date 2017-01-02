@@ -1,0 +1,46 @@
+﻿@model EditFoodModel
+
+@{
+    Layout = "_AdminLayout";
+}
+
+<div class="row">
+    <div class="col-md-8 col-md-offset-2">
+        <form asp-action="Edit" method="post">
+            <div class="form-group">
+                <input type="hidden" asp-for="Matratt.MatrattId" value="@Model.Matratt.MatrattId" />
+                <div class="input-group">
+                    <label asp-for="Matratt.MatrattNamn"></label>
+                    <input class="form-control" asp-for="Matratt.MatrattNamn" value="@Model.Matratt.MatrattNamn" />
+                    <span asp-validation-for="Matratt.MatrattNamn"></span>
+                </div>
+                <div class="input-group">
+                    <label asp-for="Matratt.Beskrivning"></label>
+                    <input class="form-control" asp-for="Matratt.Beskrivning" value="@Model.Matratt.Beskrivning" />
+                    <span asp-validation-for="Matratt.Beskrivning"></span>
+                </div>
+                <div class="input-group">
+                    <label asp-for="Matratt.Pris"></label>
+                    <input class="form-control" asp-for="Matratt.Pris" value="@Model.Matratt.Pris" />
+                    <span asp-validation-for="Matratt.Pris"></span>
+                </div>
+                <div class="input-group">
+                    <label>Välj Kategori</label>
+                    <br />
+                    <select asp-for="Matratt.MatrattTyp" asp-items="@ViewBag.categories"></select>
+                </div>
+                <hr />
+                <h4>Ingredienser - Markera de ingredienser rätten innehåller</h4>
+                <div id="ingredient-form" class="form-group">
+                    @foreach (var ingredient in @ViewBag.products)
+                    {
+                        <label class="checkbox-inline"><input type="checkbox" value="@ingredient.ProduktId" name="productId">@ingredient.ProduktNamn</label>
+                    }
+                </div>
+            </div>
+            <hr />
+            <button class="btn btn-success" type="submit">Spara ändringar</button>
+            <a class="btn btn-default" asp-controller="Admin" asp-action="Index">Tillbaka</a>
+        </form>
+    </div>
+</div>
