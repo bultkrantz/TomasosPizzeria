@@ -9,7 +9,7 @@
     <h1>Välkommen till tomasos pizzeria</h1>
     <h2>Nedanför hittar du våran meny</h2>
 
-   <p class="pull-right">För att beställa måste du <a asp-controller="Home" asp-action="Login">logga in</a></p>
+   <p class="pull-right">För att beställa måste du <a asp-controller="Account" asp-action="Login">logga in</a></p>
 </div>
 
 <div class="container">
@@ -29,7 +29,7 @@
                     <tr>
                         <td>@dish.MatrattNamn</td>
                         <td>@dish.Beskrivning</td>
-                        <td>@dish.Pris</td>
+                        <td>@dish.Pris kr</td>
                     </tr>
                 }
             </table>
@@ -52,7 +52,7 @@
                     <tr>
                         <td>@dish.MatrattNamn</td>
                         <td>@dish.Beskrivning</td>
-                        <td>@dish.Pris</td>
+                        <td>@dish.Pris kr</td>
                     </tr>
                 }
             </table>
@@ -75,7 +75,7 @@
                     <tr>
                         <td>@dish.MatrattNamn</td>
                         <td>@dish.Beskrivning</td>
-                        <td>@dish.Pris</td>
+                        <td>@dish.Pris kr</td>
                     </tr>
                 }
             </table>

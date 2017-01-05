@@ -1,0 +1,19 @@
+﻿@using Microsoft.ApplicationInsights.Extensibility.Implementation
+@using Microsoft.AspNetCore.Http
+@model LoggedInModel
+
+@{
+    Layout = "_LoggedIn";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <h1 class="alert-success">Beställning skickad!</h1>
+            <h3>Tid: @TempData["time"]</h3>
+            <h3>Totalbelopp: @TempData["ordertotal"] Kr</h3>
+            <h3>Rabatt: @TempData["discount"] Kr</h3>
+            <a class="btn btn-primary" asp-controller="Customer" asp-action="ToIndex" asp-route-id="@Model.UserInfo.Id">Ok</a>
+        </div>
+    </div>
+</div>

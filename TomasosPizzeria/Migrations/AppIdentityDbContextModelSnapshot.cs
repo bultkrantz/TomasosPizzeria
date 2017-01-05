@@ -132,6 +132,8 @@ namespace TomasosPizzeria.Migrations
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
 
+                    b.Property<int>("CustomerId");
+
                     b.Property<string>("Email")
                         .HasAnnotation("MaxLength", 256);
 

@@ -38,8 +38,7 @@ namespace TomasosPizzeria
             // Add framework services.
             services.AddApplicationInsightsTelemetry(Configuration);
 
-            var connection = @"Server=BULTKRANTZ\SQLEXPRESS;Database=Tomasos;Trusted_Connection=True;MultipleActiveResultSets=true;";
-            services.AddDbContext<TomasosContext>(options => options.UseSqlServer(connection));
+            services.AddDbContext<TomasosContext>(options => options.UseSqlServer(Configuration["Data:Tomasos:ConnectionString"]));
 
             services.AddDbContext<AppIdentityDbContext>(options => options.UseSqlServer(Configuration["Data:TomasosIdentity:ConnectionString"]));
 
@@ -58,6 +57,8 @@ namespace TomasosPizzeria
                     opts.Password.RequireDigit = false;
                 })
                 .AddEntityFrameworkStores<AppIdentityDbContext>();
+
+            services.AddMemoryCache();
 
             services.AddSession();
 

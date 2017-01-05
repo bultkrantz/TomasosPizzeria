@@ -1,4 +1,4 @@
-﻿@model TomasosPizzeria.ViewModels.LoggedInModel
+﻿@model LoggedInModel
 
 @{
     Layout = "_LoggedIn";
@@ -7,86 +7,89 @@
 <div class="container">
 
     <div class="col-md-offset-2 col-md-6" id="createForm">
-
+        @if (@TempData["success"] != null)
+            {
+            <div class="container-fluid text-center">
+                <span id="ingredient-success" class="alert-success flimmer">@TempData["success"]</span>
+            </div>
+        }
         <div class="jumbotron text-center">
             <h3>Redigera dina uppgifter</h3>
         </div>
+        <form asp-action="SaveChanges" asp-controller="Customer" class="form-horizontal" method="post">
 
-
-        <form asp-action="SaveChanges" asp-controller="Customer" class="form-horizontal">
-            
-            <input asp-for="Kund.KundId" type="hidden" value="@Model.Kund.KundId"/>
+            <input asp-for="@Model.Customer.KundId" type="hidden" value="@Model.Customer.KundId" />
 
             <div class="form-group">
-                <div class="col-sm-3 text-right">*<label class="control-label" asp-for="Kund.Namn"></label>:</div>
+                <div class="col-sm-3 text-right">*<label class="control-label" asp-for="@Model.Customer.Namn"></label>:</div>
                 <div class="col-sm-9 text-center">
-                    <input asp-for="Kund.Namn" class="form-control" value="@Model.Kund.Namn" />
-                    <span asp-validation-for="Kund.Namn"></span>
+                    <input asp-for="@Model.Customer.Namn" class="form-control" value="@Model.Customer.Namn" />
+                    <span asp-validation-for="@Model.Customer.Namn"></span>
                 </div>
             </div>
 
             <div class="form-group">
-                <div class="col-sm-3 text-right"><label class="control-label" asp-for="Kund.Email"></label>:</div>
+                <div class="col-sm-3 text-right"><label class="control-label" asp-for="@Model.Customer.Email"></label>:</div>
                 <div class="col-sm-9 text-center">
-                    <input asp-for="Kund.Email" class="form-control" value="@Model.Kund.Email"/>
-                    <span asp-validation-for="Kund.Email"></span>
+                    <input asp-for="@Model.Customer.Email" class="form-control" value="@Model.Customer.Email" />
+                    <span asp-validation-for="@Model.Customer.Email"></span>
                 </div>
             </div>
 
             <div class="form-group">
-                <div class="col-sm-3 text-right">*<label class="control-label" asp-for="Kund.Gatuadress"></label>:</div>
+                <div class="col-sm-3 text-right">*<label class="control-label" asp-for="@Model.Customer.Gatuadress"></label>:</div>
                 <div class="col-sm-9 text-center">
-                    <input asp-for="Kund.Gatuadress" class="form-control" value="@Model.Kund.Gatuadress"/>
-                    <span asp-validation-for="Kund.Gatuadress"></span>
+                    <input asp-for="@Model.Customer.Gatuadress" class="form-control" value="@Model.Customer.Gatuadress" />
+                    <span asp-validation-for="@Model.Customer.Gatuadress"></span>
                 </div>
             </div>
 
             <div class="form-group">
-                <div class="col-sm-3 text-right">*<label class="control-label" asp-for="Kund.Postnr"></label>:</div>
+                <div class="col-sm-3 text-right">*<label class="control-label" asp-for="@Model.Customer.Postnr"></label>:</div>
                 <div class="col-sm-9 text-center">
-                    <input asp-for="Kund.Postnr" class="form-control" value="@Model.Kund.Postnr"/>
-                    <span asp-validation-for="Kund.Postnr"></span>
+                    <input asp-for="@Model.Customer.Postnr" class="form-control" value="@Model.Customer.Postnr" />
+                    <span asp-validation-for="@Model.Customer.Postnr"></span>
                 </div>
             </div>
 
             <div class="form-group">
-                <div class="col-sm-3 text-right">*<label class="control-label" asp-for="Kund.Postort"></label>:</div>
+                <div class="col-sm-3 text-right">*<label class="control-label" asp-for="@Model.Customer.Postort"></label>:</div>
                 <div class="col-sm-9 text-center">
-                    <input asp-for="Kund.Postort" class="form-control" value="@Model.Kund.Postort"/>
-                    <span asp-validation-for="Kund.Postort"></span>
+                    <input asp-for="@Model.Customer.Postort" class="form-control" value="@Model.Customer.Postort" />
+                    <span asp-validation-for="@Model.Customer.Postort"></span>
                 </div>
             </div>
 
             <div class="form-group">
-                <div class="col-sm-3 text-right"><label class="control-label" asp-for="Kund.Telefon"></label>:</div>
+                <div class="col-sm-3 text-right"><label class="control-label" asp-for="@Model.Customer.Telefon"></label>:</div>
                 <div class="col-sm-9 text-center">
-                    <input asp-for="Kund.Telefon" class="form-control" value="@Model.Kund.Telefon"/>
-                    <span asp-validation-for="Kund.Telefon"></span>
+                    <input asp-for="@Model.Customer.Telefon" class="form-control" value="@Model.Customer.Telefon" />
+                    <span asp-validation-for="@Model.Customer.Telefon"></span>
                 </div>
             </div>
 
             <div class="form-group">
-                <div class="col-sm-3 text-right">*<label class="control-label" asp-for="Kund.AnvandarNamn"></label>:</div>
+                <div class="col-sm-3 text-right">*<label class="control-label" asp-for="@Model.Customer.AnvandarNamn"></label>:</div>
                 <div class="col-sm-9 text-center">
-                    <input asp-for="Kund.AnvandarNamn" class="form-control" value="@Model.Kund.AnvandarNamn"/>
-                    <span asp-validation-for="Kund.AnvandarNamn"></span>
+                    <input asp-for="@Model.Customer.AnvandarNamn" class="form-control" value="@Model.Customer.AnvandarNamn" />
+                    <span asp-validation-for="@Model.Customer.AnvandarNamn"></span>
                 </div>
             </div>
 
             <div class="form-group">
-                <div class="col-sm-3 text-right">*<label class="control-label" asp-for="Kund.Losenord"></label>:</div>
+                <div class="col-sm-3 text-right">*<label class="control-label" asp-for="@Model.Customer.Losenord"></label>:</div>
                 <div class="col-sm-9 text-center">
-                    <input asp-for="Kund.Losenord" class="form-control" type="text" value="@Model.Kund.Losenord"/>
-                    <span asp-validation-for="Kund.Losenord"></span>
+                    <input asp-for="@Model.Customer.Losenord" class="form-control" type="text" value="@Model.Customer.Losenord" />
+                    <span asp-validation-for="@Model.Customer.Losenord"></span>
                 </div>
             </div>
 
-            <div class="input-group center-block" id="btnCreate">
-                <button class="btn btn-login-form" type="submit">Spara Ändringar</button>
+            <div class="col-sm-offset-3">
+                <button class="btn btn-success" type="submit">Spara Ändringar</button>
+                <a asp-controller="Customer" asp-action="ToIndex" asp-route-id="@Model.UserInfo.Id" class="btn btn-default">Avbryt</a>
             </div>
         </form>
         <div class="input-group" id="btnBack">
-            <a asp-controller="Customer" asp-action="Index" asp-route-id="@Model.Kund.KundId"><button class="btn btn-default">Avbryt</button></a>
 
         </div>
         <div class="form-group text-center">
@@ -97,10 +100,6 @@
             @if (ViewBag.email != null)
             {
                 <label class="field-validation-error">@ViewBag.email</label>
-            }
-            @if (TempData["success"] != null)
-            {
-                <label class="alert-success">@TempData["success"]<i class="glyphicon glyphicon-check"></i></label>
             }
         </div>
     </div>

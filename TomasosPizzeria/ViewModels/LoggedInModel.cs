@@ -13,6 +13,6 @@ namespace TomasosPizzeria.ViewModels
         public List<FoodModel> Pizza { get; set; }
         public List<FoodModel> Pasta { get; set; }
         public List<FoodModel> Sallad { get; set; }
-        public List<Matratt> ShoppingCart { get; set; } = new List<Matratt>();
+        public Cart Cart { get; set; }
     }
 }

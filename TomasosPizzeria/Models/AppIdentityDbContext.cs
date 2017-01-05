@@ -8,5 +8,7 @@ namespace TomasosPizzeria.Models
     {
         public AppIdentityDbContext(DbContextOptions<AppIdentityDbContext> options)
             : base(options) { }
+
+        public DbSet<AppUser> AppUsers { get; set; }
     }
 }

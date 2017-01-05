@@ -71,12 +71,16 @@ namespace TomasosPizzeria.Migrations.Tomasos
                         .IsRequired()
                         .HasColumnType("varchar(20)");
 
+                    b.Property<int>("Bonus");
+
                     b.Property<string>("Email")
                         .HasColumnType("varchar(50)");
 
                     b.Property<string>("Gatuadress")
                         .IsRequired()
                         .HasColumnType("varchar(50)");
+
+                    b.Property<int>("GratisPizza");
 
                     b.Property<string>("Losenord")
                         .IsRequired()

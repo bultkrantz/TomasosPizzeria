@@ -9,7 +9,12 @@
 <div class="container">
 
     <div class="col-md-offset-2 col-md-6" id="createForm">
-
+        @if (@TempData["success"] != null)
+            {
+            <div class="container-fluid text-center">
+                <span id="ingredient-success" class="alert-success">@TempData["success"]</span>
+            </div>
+        }
         <div class="jumbotron text-center">
             <h3>Fyll i alla uppgifter för att skapa en ny användare</h3>
         </div>
@@ -81,14 +86,11 @@
                 </div>
             </div>
 
-            <div class="input-group center-block" id="btnCreate">
-                <button class="btn btn-login-form" type="submit">Skapa användare</button>
+            <div class="col-sm-offset-3 col-sm-10">
+                <button class="btn btn-success" type="submit">Skapa användare</button>
+                <a class="btn btn-default" asp-controller="Home" asp-action="Index">tillbaka</a>
             </div>
         </form>
-        <div class="input-group" id="btnBack">
-            <a asp-controller="Home" asp-action="Index"><button class="btn btn-default">tillbaka</button></a>
-
-        </div>
         <div class="form-group text-center">
             @if (ViewBag.username != null)
             {
@@ -97,10 +99,6 @@
             @if (ViewBag.email != null)
             {
                 <label class="field-validation-error">@ViewBag.email</label>
-            }
-            @if (TempData["success"] != null)
-            {
-                <label class="alert-success">@TempData["success"]<i class="glyphicon glyphicon-check"></i></label>
             }
         </div>
     </div>

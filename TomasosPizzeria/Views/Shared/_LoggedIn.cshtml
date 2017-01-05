@@ -1,4 +1,5 @@
-﻿@model TomasosPizzeria.ViewModels.LoggedInModel
+﻿@using System.Security.Cryptography.X509Certificates
+@model TomasosPizzeria.ViewModels.LoggedInModel
 
 <!DOCTYPE html>
 <html>
@@ -19,13 +20,14 @@
     </environment>
     @Html.ApplicationInsightsJavaScript(TelemetryConfiguration)
     <link href="https://fonts.googleapis.com/css?family=Bilbo|Raleway" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
 </head>
 <body>
 
     <div class="header">
         <div class="container">
             <div class="col-md-8">
-                <a asp-controller="Customer" asp-action="Index" asp-route-id="@Model.UserInfo.Id"><h1 class="tomasos-header">Tomasos Pizzeria</h1></a>
+                <a asp-controller="Customer" asp-action="ToIndex" asp-route-id="@Model.UserInfo.Id"><h1 class="tomasos-header">Tomasos Pizzeria</h1></a>
                 <h2 class="tomasos-quote">Italienska pizzor bakade med kärlek</h2>
             </div>
         </div>
@@ -34,14 +36,33 @@
     <nav class="navbar navbar-default main-nav">
         <div class="container-fluid">
             <div class="navbar-header">
-                <a class="navbar-brand" asp-controller="Customer" asp-action="Index" asp-route-id="@Model.UserInfo.Id">Hem</a>
+                <a class="navbar-brand" asp-controller="Customer" asp-action="ToIndex" asp-route-id="@Model.UserInfo.Id">Hem</a>
             </div>
             <ul class="nav navbar-nav">
                 <li><a asp-controller="Account" asp-action="Logout">Logga ut</a></li>
                 <li><a asp-controller="Customer" asp-action="Edit" asp-route-id="@Model.UserInfo.Id">Redigera profil</a></li>
             </ul>
+            @if (User.IsInRole("PremiumUser"))
+            {
+                <span id="bonus" class="navbar-text pull-right" title="Gratis pizza vid 100 poäng">Bonus poäng: @Model.Customer.Bonus  -  Gratis pizzor: @Model.Customer.GratisPizza</span>
+            }
             <!-- Trigger the modal with a button -->
-            <button class="btn navbar-btn btn-create pull-right" data-toggle="modal" data-target="#shoppingCart">Varukorg</button>
+            <a class="btn navbar-btn btn-default pull-right" data-toggle="modal" data-target="#shoppingCart">
+                <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+            </a>
+            <div class="navbar-text pull-right">
+                @if (@Model.Cart != null)
+                {
+                    if (!@Model.Cart.Lines.Any())
+                    {
+                        @:Varukorgen är tom
+                    }
+                    else
+                    {
+                        @:Antal varor: @Model.Cart.Lines.Count()
+                    }
+                }
+            </div>
         </div>
     </nav>
 
@@ -60,51 +81,55 @@
                 </div>
                 <div class="modal-body">
                     <table class="table table-striped">
-                        @foreach (var food in @Model.ShoppingCart)
+                        @if (@Model.Cart != null)
                         {
-                            <tr>
-                                <td class="text-center">
-                                    <form class="navbar-form" asp-controller="Customer" asp-action="RemoveFromCart">
-                                        <input type="hidden" name="foodId" value="@food.MatrattId" />
-                                        <input type="hidden" name="customerId" value="@Model.UserInfo.Id" />
-                                        @foreach (var item in @Model.ShoppingCart)
-                                        {
-                                            <input type="hidden" name="shoppingCart" value="@item.MatrattId" />
-                                        }
-                                        <button type="submit" class="btn btn-xs navbar-btn"><i class="glyphicon glyphicon-remove"></i></button>
-                                    </form>
-                                </td>
-                                <td id="food-cell">
-                                    @food.MatrattNamn
-                                </td>
-                                <td>@food.Pris Kr</td>
-                            </tr>
-                        }
+                            foreach (var line in @Model.Cart.Lines)
+                            {
+                                <tr>
+                                    <td class="text-center">
+                                        <form class="navbar-form" asp-controller="Cart" asp-action="RemoveFromCart" method="get">
+                                            <input type="hidden" name="foodId" value="@line.Matratt.MatrattId" />
+                                            <input type="hidden" name="customerId" value="@Model.UserInfo.Id" />
+                                            <button type="submit" class="btn btn-xs navbar-btn"><i class="glyphicon glyphicon-remove"></i></button>
+                                        </form>
+                                    </td>
+                                    <td id="food-cell">
+                                        @line.Matratt.MatrattNamn
+                                    </td>
+                                    <td>Antal: @line.Quantity st</td>
+                                    <td>
+                                        @{
+                                            var sum = line.Matratt.Pris * line.Quantity;
+                                            @sum
+                                        } Kr
+                                    </td>
+                                </tr>
+                                                }
+                                            }
                     </table>
                     <hr />
                     @{
-                        var orderTotal = 0;
+                        if (@Model.Cart != null)
+                        {
+                            var orderTotal = @Model.Cart.ComputeTotalValue();
+                            <h1 class="text-center">Ordertotal: @orderTotal Kr</h1>
+                            if (@Model.Customer.GratisPizza > 0 && @Model.Cart.ContainsPizza())
+                            {
+                                <a asp-controller="Cart" asp-action="UseFreePizza" asp-route-id="@Model.UserInfo.Id" class="btn btn-primary">Använd gratis pizza bonus</a>
+                            }
+                        }
+                        else
+                        {
+                            <h1>Varukorgen är tom</h1>
+                        }
                     }
-                    @foreach (var food in @Model.ShoppingCart)
-                    {
-                        orderTotal += food.Pris;
-                    }
-                    @{
-                        var resultString = "Ordertotal: " + orderTotal + "Kr";
-                    }
-                    <h1 class="text-center">@resultString</h1>
 
                 </div>
                 <div class="modal-footer">
                     <div class="input-group"><button type="button" class="btn btn-default" data-dismiss="modal">Stäng</button></div>
-                    <form asp-controller="Customer" asp-action="SendOrder" method="post">
-                        <input type="hidden" name="customerId" value="@Model.Customer.KundId"/>
-                        @foreach (var item in @Model.ShoppingCart)
-                        {
-                            <input type="hidden" name="shoppingCart" value="@item.MatrattId"/>
-                        }
-                        <button type="submit" class="btn btn-success">Skicka beställning</button>
-                    </form>
+                    <a class="btn btn-primary" asp-controller="Cart" asp-action="CreateOrder" asp-route-id="@Model.Customer.KundId" method="post">
+                        Skicka beställning
+                    </a>
                 </div>
             </div>
         </div>

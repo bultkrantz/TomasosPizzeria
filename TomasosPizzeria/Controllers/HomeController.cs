@@ -21,11 +21,7 @@ namespace TomasosPizzeria.Controllers
             _tomasosContext = tomasosContext;
             _userManagager = userManagager;
         }
-        //public ViewResult Index() =>
-        //    View(new Dictionary<string, object>
-        //     { ["Placeholder"] = "Placeholder" });
 
-        // GET: /<controller>/
         public IActionResult Index()
         {
             ViewBag.pizza = _tomasosContext.Matratt.Where(x => x.MatrattTyp == 1).ToList();
@@ -53,54 +49,28 @@ namespace TomasosPizzeria.Controllers
 
                 if (userNameTaken == null && emailRegistered == null)
                 {
-                    ViewBag.username = null;
-                    ViewBag.email = null;
-                    _tomasosContext.Kund.Add(kund);
-                    _tomasosContext.SaveChanges();
                     AppUser user = new AppUser()
                     {
                         UserName = kund.AnvandarNamn,
                         Email = kund.Email,
+                        CustomerId = kund.KundId
                     };
                     IdentityResult useResult = await _userManagager.CreateAsync(user, kund.Losenord);
                     IdentityResult roleResult = await _userManagager.AddToRoleAsync(user, "RegularUser");
-                   
+
                     if (useResult.Succeeded && roleResult.Succeeded)
                     {
+                        ViewBag.username = null;
+                        ViewBag.email = null;
+                        _tomasosContext.Kund.Add(kund);
+                        _tomasosContext.SaveChanges();
+                        ModelState.Clear();
                         TempData["success"] = "Användare skapad";
                     }
                 }
             }
             return View();
         }
-
-
-        //public IActionResult Customer()
-        //{
-        //    var vmList = new List<FoodModel>();
-        //    var foodList = _tomasosContext.Matratt.ToList();
-
-        //    foreach (var matratt in foodList)
-        //    {
-        //        var matrattProduktLista = _tomasosContext.MatrattProdukt.Where(x => x.MatrattId == matratt.MatrattId).ToList();
-        //        var listOfProdukter = new List<Produkt>();
-        //        foreach (var matrattProdukt in matrattProduktLista)
-        //        {
-        //            var productList = _tomasosContext.Produkt.Where(x => x.ProduktId == matrattProdukt.ProduktId).ToList();
-        //            foreach (var produkt in productList)
-        //            {
-        //                listOfProdukter.Add(produkt);
-        //            }
-        //        }
-        //        var vm = new FoodModel()
-        //        {
-        //            Matratt = matratt,
-        //            Produkter = listOfProdukter
-        //        };
-        //        vmList.Add(vm);
-        //    }
-        //    return View("test", vmList);
-        //}
 
         //Metod för att returnera en lista med foodmodels (varje foodmodel innehåller en maträtt och en lista med dess produkter)
         public List<FoodModel> FoodModels(List<Matratt> foodList, List<FoodModel> foodModels)

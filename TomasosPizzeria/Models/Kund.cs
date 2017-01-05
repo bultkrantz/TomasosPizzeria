@@ -42,6 +42,10 @@ namespace TomasosPizzeria.Models
         [Required(ErrorMessage = "Du måste ange ett lösenord")]
         public string Losenord { get; set; }
 
+        public int Bonus { get; set; }
+
+        public int GratisPizza { get; set; }
+
         public virtual ICollection<Bestallning> Bestallning { get; set; }
     }
 }

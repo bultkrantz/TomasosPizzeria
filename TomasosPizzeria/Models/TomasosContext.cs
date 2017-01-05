@@ -16,7 +16,7 @@ namespace TomasosPizzeria.Models
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(@"Server=BULTKRANTZ\SQLEXPRESS;Database=Tomasos;Trusted_Connection=True;");
+            optionsBuilder.UseSqlServer(@"Server=BULTKRANTZ;Database=Tomasos;Trusted_Connection=True;");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

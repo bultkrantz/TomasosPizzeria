@@ -3,17 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TomasosPizzeria.Models;
 using TomasosPizzeria.ViewModels;
 using Microsoft.AspNetCore.Identity;
+using NuGet.Protocol.Core.v3;
+using TomasosPizzeria.Infrastructure;
 
 
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace TomasosPizzeria.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "RegularUser")]
     public class CustomerController : Controller
     {
         private readonly TomasosContext _tomasosContext;
@@ -25,57 +28,26 @@ namespace TomasosPizzeria.Controllers
             _userManager = UserManager;
         }
 
-        [Authorize(Roles = "RegularUser")]
-        public async Task<IActionResult> Index(AppUser user)
+        public IActionResult Index(AppUser user)
         {
-            ViewBag.userdata = GetData(nameof(Index));
-            AppUser customer = await _userManager.FindByIdAsync(user.Id);
-            //var vm = CreateLoggedInModel(kundId, new List<int>());
-            var vm = CreateLoggedInModel(customer, new List<int>());
+            var vm = CreateLoggedInModel(user);
+            vm.Cart = GetCart();
             return View(vm);
         }
 
-
-        //public IActionResult Index(int id)
-        //{
-        //    var listOfPizzaFoodModels = new List<FoodModel>();
-        //    var listOfPastaFoodModels = new List<FoodModel>();
-        //    var listOfSalladFoodModels = new List<FoodModel>();
-
-        //    var pizzaList = _tomasosContext.Matratt.Where(x => x.MatrattTyp == 1).ToList();
-        //    var pastaList = _tomasosContext.Matratt.Where(x => x.MatrattTyp == 2).ToList();
-        //    var salladList = _tomasosContext.Matratt.Where(x => x.MatrattTyp == 3).ToList();
-
-        //    var pizzaModelList = FoodModels(pizzaList, listOfPizzaFoodModels);
-        //    var pastaModelList = FoodModels(pastaList, listOfPastaFoodModels);
-        //    var salladModelList = FoodModels(salladList, listOfSalladFoodModels);
-
-        //    var customer = _tomasosContext.Kund.FirstOrDefault(x => x.KundId == id);
-
-        //    var loggedInModel = new LoggedInModel()
-        //    {
-        //        Kund = customer,
-        //        Pizza = pizzaModelList,
-        //        Pasta = pastaModelList,
-        //        Sallad = salladModelList,
-        //    };
-
-        //    ViewBag.shoppingcart = loggedInModel.ShoppingCart;
-
-        //    return View(loggedInModel);
-        //}
-
-        public IActionResult Edit(int id)
+        public IActionResult ToIndex(string id)
         {
-            var customer = _tomasosContext.Kund.FirstOrDefault(x => x.KundId == id);
-            var loggedInModel = new LoggedInModel()
-            {
-                //User = customer,
-                Pizza = null,
-                Pasta = null,
-                Sallad = null
-            };
-            return View(loggedInModel);
+            var userInfo = GetUser(id);
+            var vm = CreateLoggedInModel(userInfo);
+            return View("Index", vm);
+        }
+
+        public IActionResult Edit(string id)
+        {
+            var userInfo = GetUser(id);
+            var vm = CreateLoggedInModel(userInfo);
+            vm.Cart = GetCart();
+            return View(vm);
         }
 
         public IActionResult LogOut()
@@ -84,16 +56,16 @@ namespace TomasosPizzeria.Controllers
         }
 
         [HttpPost]
-        public IActionResult SaveChanges(Kund kund)
+        public IActionResult SaveChanges(Kund Customer)
         {
             if (ModelState.IsValid)
             {
                 //Kollar om användarnamn eller email är upptagna
-                var oldCustomerInfo = _tomasosContext.Kund.FirstOrDefault(x => x.KundId == kund.KundId);
-                var usernameTaken = _tomasosContext.Kund.Any(x => x.AnvandarNamn.ToLower() == kund.AnvandarNamn.ToLower());
-                var emailRegistered = _tomasosContext.Kund.Any(x => x.Email.ToLower() == kund.Email.ToLower());
-                var usernameNotChanged = kund.AnvandarNamn == oldCustomerInfo.AnvandarNamn;
-                var emailNotChanged = kund.Email == oldCustomerInfo.Email;
+                var oldCustomerInfo = _tomasosContext.Kund.FirstOrDefault(x => x.KundId == Customer.KundId);
+                var usernameTaken = _tomasosContext.Kund.Any(x => x.AnvandarNamn.ToLower() == Customer.AnvandarNamn.ToLower());
+                var emailRegistered = _tomasosContext.Kund.Any(x => x.Email.ToLower() == Customer.Email.ToLower());
+                var usernameNotChanged = Customer.AnvandarNamn == oldCustomerInfo.AnvandarNamn;
+                var emailNotChanged = Customer.Email == oldCustomerInfo.Email;
 
                 ViewBag.username = usernameTaken ? "Användarnamnet är tyvär upptaget" : null;
 
@@ -110,27 +82,31 @@ namespace TomasosPizzeria.Controllers
 
                 if (usernameTaken == false && emailRegistered == false || usernameNotChanged && emailNotChanged)
                 {
-                    var editedCustomer = _tomasosContext.Kund.FirstOrDefault(x => x.KundId == kund.KundId);
+                    var editedCustomer = _tomasosContext.Kund.FirstOrDefault(x => x.KundId == Customer.KundId);
 
                     if (editedCustomer != null)
                     {
-                        editedCustomer.KundId = kund.KundId;
-                        editedCustomer.AnvandarNamn = kund.AnvandarNamn;
-                        editedCustomer.Bestallning = kund.Bestallning;
-                        editedCustomer.Email = kund.Email;
-                        editedCustomer.Gatuadress = kund.Gatuadress;
-                        editedCustomer.Losenord = kund.Losenord;
-                        editedCustomer.Namn = kund.Namn;
-                        editedCustomer.Postnr = kund.Postnr;
-                        editedCustomer.Postort = kund.Postort;
-                        editedCustomer.Telefon = kund.Telefon;
+                        var oldUserInfo = _userManager.Users.FirstOrDefault(x => x.Email == editedCustomer.Email);
 
+                        editedCustomer.KundId = Customer.KundId;
+                        editedCustomer.AnvandarNamn = Customer.AnvandarNamn;
+                        editedCustomer.Bestallning = Customer.Bestallning;
+                        editedCustomer.Email = Customer.Email;
+                        editedCustomer.Gatuadress = Customer.Gatuadress;
+                        editedCustomer.Losenord = Customer.Losenord;
+                        editedCustomer.Namn = Customer.Namn;
+                        editedCustomer.Postnr = Customer.Postnr;
+                        editedCustomer.Postort = Customer.Postort;
+                        editedCustomer.Telefon = Customer.Telefon;
+                        oldUserInfo.Email = editedCustomer.Email;
+                        oldUserInfo.UserName = editedCustomer.AnvandarNamn;
+                        _userManager.UpdateAsync(oldUserInfo);
                         _tomasosContext.Kund.Update(editedCustomer);
                         _tomasosContext.SaveChanges();
-
                         var loggedInModel = new LoggedInModel()
                         {
-                            //Kund = editedCustomer,
+                            Customer = editedCustomer,
+                            UserInfo = oldUserInfo,
                             Pizza = null,
                             Pasta = null,
                             Sallad = null
@@ -145,77 +121,17 @@ namespace TomasosPizzeria.Controllers
             return View("Edit");
         }
 
-        [HttpPost]
-        public async Task<IActionResult> AddToCart(string customerId, int foodId, List<int> shoppingCart)
+
+        [Authorize(Roles = "PremiumUser")]
+        public IActionResult Bonus(string id)
         {
-            AppUser user = await _userManager.FindByIdAsync(customerId);
-            var vm = CreateLoggedInModel(user, shoppingCart);
-            var orderedFood = _tomasosContext.Matratt.FirstOrDefault(x => x.MatrattId == foodId);
-
-            vm.ShoppingCart.Add(orderedFood);
-            TempData["success"] = "Du lade till " + orderedFood.MatrattNamn + " i varukorgen";
-
-            return View("Index", vm);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> RemoveFromCart(int foodId, string customerId, List<int> shoppingCart)
-        {
-            AppUser user = await _userManager.FindByIdAsync(customerId);
-            var vm = CreateLoggedInModel(user, shoppingCart);
-            var foodToRemove = _tomasosContext.Matratt.FirstOrDefault(x => x.MatrattId == foodId);
-
-            vm.ShoppingCart.Remove(foodToRemove);
-            TempData["success"] = "Du tog bort " + foodToRemove.MatrattNamn + " från varukorgen";
-
-            return View("Index", vm);
-        }
-
-        [HttpPost]
-        public IActionResult SendOrder(int customerId, List<int> shoppingCart)
-        {
-            var orderList = new List<Matratt>();
-            foreach (var i in shoppingCart)
-            {
-                var food = _tomasosContext.Matratt.FirstOrDefault(x => x.MatrattId == i);
-                orderList.Add(food);
-            }
-
-            var order = new Bestallning()
-            {
-                BestallningDatum = DateTime.Now,
-                Totalbelopp = orderList.Sum(food => food.Pris),
-                KundId = customerId,
-                Levererad = false
-            };
-
-            _tomasosContext.Bestallning.Add(order);
-            _tomasosContext.SaveChanges();
-
-            var orderFoodList = _tomasosContext.BestallningMatratt;
-
-            foreach (var matratt in orderList)
-            {
-                var orderFood = new BestallningMatratt()
-                {
-                    BestallningId = order.BestallningId,
-                    MatrattId = matratt.MatrattId,
-                    Antal = orderList.Count(x => x.MatrattId == matratt.MatrattId)
-                };
-                orderFoodList.Add(orderFood);
-                _tomasosContext.SaveChanges();
-            }
-            var customer = _tomasosContext.Kund.FirstOrDefault(x => x.KundId == customerId);
-            var userInfo = _userManager.Users.FirstOrDefault(x => x.Email == customer.Email);
-            var vm = CreateLoggedInModel(userInfo, shoppingCart);
-            vm.ShoppingCart.Clear();
-            TempData["success"] = "Beställning skickad!";
-
-            return View("Index", vm);
+            AppUser user = GetUser(id);
+            var vm = CreateLoggedInModel(user);
+            return View(vm);
         }
 
         //Metod för att skapa en LoggedInModel
-        public LoggedInModel CreateLoggedInModel(AppUser user, List<int> shoppingCart)
+        public LoggedInModel CreateLoggedInModel(AppUser user)
         {
             var listOfPizzaFoodModels = new List<FoodModel>();
             var listOfPastaFoodModels = new List<FoodModel>();
@@ -229,14 +145,6 @@ namespace TomasosPizzeria.Controllers
             var pastaModelList = FoodModels(pastaList, listOfPastaFoodModels);
             var salladModelList = FoodModels(salladList, listOfSalladFoodModels);
 
-            var foodsToOrder = new List<Matratt>();
-
-            foreach (var i in shoppingCart)
-            {
-                var food = _tomasosContext.Matratt.FirstOrDefault(x => x.MatrattId == i);
-                foodsToOrder.Add(food);
-            }
-
             var vm = new LoggedInModel()
             {
                 UserInfo = user,
@@ -244,15 +152,15 @@ namespace TomasosPizzeria.Controllers
                 Pizza = pizzaModelList,
                 Pasta = pastaModelList,
                 Sallad = salladModelList,
-                ShoppingCart = foodsToOrder
+                Cart = GetCart()
             };
 
             return vm;
         }
 
-        public async Task<AppUser> GetUser(string id)
+        private AppUser GetUser(string id)
         {
-            AppUser user = await _userManager.FindByIdAsync(id);
+            AppUser user = _userManager.Users.FirstOrDefault(x => x.Id == id);
             return user;
         }
 
@@ -281,13 +189,10 @@ namespace TomasosPizzeria.Controllers
             return foodModels;
         }
 
-        private Dictionary<string, object> GetData(string actionName) => new Dictionary<string, object>
+        private Cart GetCart()
         {
-            ["Action"] = actionName,
-            ["User"] = HttpContext.User.Identity.Name,
-            ["Authenticated"] = HttpContext.User.Identity.IsAuthenticated,
-            ["Auth Type"] = HttpContext.User.Identity.AuthenticationType,
-            ["In Users Role"] = HttpContext.User.IsInRole("Users")
-        };
+            Cart cart = HttpContext.Session.GetJson<Cart>("Cart") ?? new Cart();
+            return cart;
+        }
     }
 }

@@ -7,10 +7,13 @@
 {
     <div class="jumbotron">
         <h2>Välkommen till Tomasos @Model.Customer.Namn</h2>
+        @if (@User.IsInRole("PremiumUser"))
+        {
+            <h3>Vid 100 poäng får du en gratis pizza vid beställning, varje maträtt du köper ger 10 poäng i vårt bonussystem</h3>
+        }
         <p>Nedanför hittar du våran meny, klicka på en maträtt för att lägga till den i din varukorg</p>
     </div>
 }
-
 else
 {
     <div class="container-fluid text-center">
