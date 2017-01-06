@@ -27,10 +27,11 @@ namespace TomasosPizzeria.Models
         [Required(ErrorMessage = "Du måste ange en postort")]
         public string Postort { get; set; }
 
-        [DataType(DataType.EmailAddress)]
+        [Required(ErrorMessage = "Du måste ange en emailadress")]
+        [DataType(DataType.EmailAddress, ErrorMessage = "Ej giltig emailadress")]
         public string Email { get; set; }
 
-        [DataType(DataType.PhoneNumber)]
+        [DataType(DataType.PhoneNumber, ErrorMessage = "Ej giltigt telefonnummer")]
         public string Telefon { get; set; }
 
         [Display(Name = "Användarnamn")]
