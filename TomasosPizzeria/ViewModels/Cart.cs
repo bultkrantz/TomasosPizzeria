@@ -36,7 +36,7 @@ namespace TomasosPizzeria.ViewModels
 
         public virtual decimal ComputeTotalValue() => _lineCollection.Sum(e => e.Matratt.Pris* e.Quantity);
         public virtual void Clear() => _lineCollection.Clear();
-        public virtual bool ContainsPizza() => _lineCollection.Exists(x => x.Matratt.MatrattTyp == 1);
+        public virtual bool ContainsPizza() => _lineCollection.Exists(x => x.Matratt.MatrattTyp == 1 && x.Matratt.Pris > 0);
         public virtual IEnumerable<CartLine> Lines => _lineCollection;
 
         public class CartLine

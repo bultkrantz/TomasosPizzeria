@@ -126,10 +126,11 @@
 
                 </div>
                 <div class="modal-footer">
-                    <div class="input-group"><button type="button" class="btn btn-default" data-dismiss="modal">Stäng</button></div>
-                    <a class="btn btn-primary" asp-controller="Cart" asp-action="CreateOrder" asp-route-id="@Model.Customer.KundId" method="post">
-                        Skicka beställning
-                    </a>
+                    <div class="input-group"><button type="button" class="btn btn-default" data-dismiss="modal">Stäng</button>
+                        <a class="btn btn-primary" asp-controller="Cart" asp-action="CreateOrder" asp-route-id="@Model.Customer.KundId" method="post">
+                            Skicka beställning
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>

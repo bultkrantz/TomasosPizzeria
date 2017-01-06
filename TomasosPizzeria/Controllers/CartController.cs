@@ -94,6 +94,9 @@ namespace TomasosPizzeria.Controllers
                 }
                 TempData["time"] = order.BestallningDatum.ToString("f");
                 TempData["ordertotal"] = cart.ComputeTotalValue();
+                TempData["adress"] = customer.Gatuadress;
+                TempData["orderid"] = order.BestallningId;
+                TempData["delivery"] = order.BestallningDatum.AddMinutes(45);
                 cart.Clear();
                 SaveCart(cart);
 
