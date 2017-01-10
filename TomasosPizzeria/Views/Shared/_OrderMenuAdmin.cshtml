@@ -24,15 +24,7 @@
                             {
                                 <tr>
                                     <td>
-                                        @*<form class="navbar-form text-center" asp-controller="Customer" asp-action="AddToCart" method="post">
-                                            <input type="hidden" name="customerId" value="@Model.User.Id" />
-                                            <input type="hidden" name="foodId" value="@food.Matratt.MatrattId" />*@
-                                            @*@foreach (var i in @Model.ShoppingCart)
-                                            {
-                                                <input type="hidden" name="shoppingCart" value="@i.MatrattId" />
-                                            }*@
-                                            <button class="btn btn-menu" id="addToCart" type="submit">@food.Matratt.MatrattNamn</button>
-                                        @*</form>*@
+                                        <button class="btn btn-menu" id="addToCart" type="submit">@food.Matratt.MatrattNamn</button>
                                     </td>
                                     <td>
                                         @for (var index = 0; index < food.Produkter.Count; index++)
@@ -83,17 +75,6 @@
                             @foreach (var food in @Model.Pasta)
                             {
                                 <tr>
-                                    @*<td>
-                                        <form class="navbar-form text-center" asp-controller="Customer" asp-action="AddToCart" method="post">
-                                            <input type="hidden" name="customerId" value="@Model.User.Id" />
-                                            <input type="hidden" name="foodId" value="@food.Matratt.MatrattId" />
-                                            @foreach (var i in @Model.ShoppingCart)
-                                            {
-                                                <input type="hidden" name="shoppingCart" value="@i.MatrattId" />
-                                            }
-                                            <button class="btn btn-menu" id="addToCart" type="submit">@food.Matratt.MatrattNamn</button>
-                                        </form>
-                                    </td>*@
                                     <td>
                                         @for (var index = 0; index < food.Produkter.Count; index++)
                                         {
@@ -144,17 +125,6 @@
                             @foreach (var food in @Model.Sallad)
                             {
                                 <tr>
-                                    @*<td>
-                                        <form class="navbar-form text-center" asp-controller="Customer" asp-action="AddToCart" method="post">
-                                            <input type="hidden" name="customerId" value="@Model.User.Id" />
-                                            <input type="hidden" name="foodId" value="@food.Matratt.MatrattId" />
-                                            @foreach (var i in @Model.ShoppingCart)
-                                            {
-                                                <input type="hidden" name="shoppingCart" value="@i.MatrattId" />
-                                            }
-                                            <button class="btn btn-menu" id="addToCart" type="submit">@food.Matratt.MatrattNamn</button>
-                                        </form>
-                                    </td>*@
                                     <td>
                                         @for (var index = 0; index < food.Produkter.Count; index++)
                                         {

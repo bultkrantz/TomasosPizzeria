@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using TomasosPizzeria.Infrastructure;
 using TomasosPizzeria.Models;
 using TomasosPizzeria.ViewModels;
@@ -13,6 +11,7 @@ using TomasosPizzeria.ViewModels;
 
 namespace TomasosPizzeria.Controllers
 {
+    [Authorize]
     public class CartController : Controller
     {
         private TomasosContext _tomasosContext;
@@ -33,22 +32,32 @@ namespace TomasosPizzeria.Controllers
                 SaveCart(cart);
             }
             var customer = _userManager.Users.FirstOrDefault(x => x.Id == customerId);
-            TempData["success"] = $"{matratt.MatrattNamn} Lades till i varukorgen";
+            if (matratt != null) TempData["success"] = $"{matratt.MatrattNamn} Lades till i varukorgen";
             return RedirectToAction("Index", "Customer", customer);
         }
 
         public RedirectToActionResult RemoveFromCart(int foodId, string customerId)
         {
+            var user = GetUser(customerId);
+            var customer = GetCustomer(user.CustomerId);
+
             Matratt matratt = _tomasosContext.Matratt
             .FirstOrDefault(p => p.MatrattId == foodId);
             if (matratt != null)
             {
                 Cart cart = GetCart();
                 cart.RemoveLine(matratt);
+                if (cart.FreePizzaUsed)
+                {
+                    cart.FreePizzaUsed = false;
+                    cart.RemoveFromTotal = 0;
+                    customer.GratisPizza++;
+                    _tomasosContext.Update(customer);
+                    _tomasosContext.SaveChanges();
+                }
                 SaveCart(cart);
             }
-            var user = _userManager.Users.FirstOrDefault(x => x.Id == customerId);
-            TempData["success"] = $"{matratt.MatrattNamn} borttagen från varukorgen";
+            if (matratt != null) TempData["success"] = $"{matratt.MatrattNamn} borttagen från varukorgen";
             return RedirectToAction("Index", "Customer", user);
         }
 
@@ -66,12 +75,12 @@ namespace TomasosPizzeria.Controllers
                 {
                     BestallningDatum = DateTime.Now,
                     KundId = id,
-                    Totalbelopp = Convert.ToInt32(cart.ComputeTotalValue()) * Convert.ToInt32(CountDiscount(cart)),
+                    Totalbelopp = cart.ComputeTotalValue() * Convert.ToInt32(CountDiscount(cart)),
                     Levererad = false
                 };
                 _tomasosContext.Bestallning.Add(order);
                 _tomasosContext.SaveChanges();
-                var bonus = GetsBonus(customer, cart, order);
+                GetsBonus(customer, cart);
 
                 foreach (var cartLine in cart.Lines.ToList())
                 {
@@ -83,14 +92,6 @@ namespace TomasosPizzeria.Controllers
                     };
                     _tomasosContext.BestallningMatratt.Add(orderFood);
                     _tomasosContext.SaveChanges();
-                    //if (bonus)
-                    //{
-                    //    TempData["success"] = $"Order skickad {order.BestallningDatum:t}! Du fick en maträtt gratis med bonussystemet. Totalsumma: {order.Totalbelopp}";
-                    //}
-                    //else
-                    //{
-                    //    TempData["success"] = $"Order skickad {order.BestallningDatum:t}! Totalsumma: {order.Totalbelopp}";
-                    //}
                 }
                 TempData["time"] = order.BestallningDatum.ToString("f");
                 TempData["ordertotal"] = cart.ComputeTotalValue();
@@ -98,6 +99,8 @@ namespace TomasosPizzeria.Controllers
                 TempData["orderid"] = order.BestallningId;
                 TempData["delivery"] = order.BestallningDatum.AddMinutes(45);
                 cart.Clear();
+                cart.FreePizzaUsed = false;
+                cart.RemoveFromTotal = 0;
                 SaveCart(cart);
 
                 return RedirectToAction("Index", "Order", user);
@@ -121,7 +124,7 @@ namespace TomasosPizzeria.Controllers
             HttpContext.Session.SetJson("Cart", cart);
         }
 
-        private bool GetsBonus(Kund kund, Cart cart, Bestallning order)
+        private void GetsBonus(Kund kund, Cart cart)
         {
             var bonus = 10;
             var isPremium = HttpContext.User.IsInRole("PremiumUser");
@@ -137,11 +140,10 @@ namespace TomasosPizzeria.Controllers
                         _tomasosContext.Kund.Update(kund);
                         _tomasosContext.SaveChanges();
                         SaveCart(cart);
-                        return true;
+                        return;
                     }
                 }
             }
-            return false;
         }
 
         private double CountDiscount(Cart cart)
@@ -172,17 +174,30 @@ namespace TomasosPizzeria.Controllers
             return 0;
         }
 
-        public IActionResult UseFreePizza(string id)
+        public IActionResult UseFreePizza(string userId, int pizzaId)
         {
-            var user = _userManager.Users.FirstOrDefault(x => x.Id == id);
+            var user = _userManager.Users.FirstOrDefault(x => x.Id == userId);
             var customer = _tomasosContext.Kund.FirstOrDefault(x => x.Email == user.Email);
             customer.GratisPizza--;
             _tomasosContext.Kund.Update(customer);
             _tomasosContext.SaveChanges();
+
             var cart = GetCart();
-            cart.Lines.FirstOrDefault(x => x.Matratt.MatrattTyp == 1).Matratt.Pris = 0;
+            var price = cart.Lines.FirstOrDefault(x => x.Matratt.MatrattId == pizzaId).Matratt.Pris;
+            cart.RemoveFromTotal = price;
+            cart.FreePizzaUsed = true;
             SaveCart(cart);
             return RedirectToAction("Index", "Customer", user);
+        }
+
+        private Kund GetCustomer(int customerId)
+        {
+            return _tomasosContext.Kund.FirstOrDefault(x => x.KundId == customerId);
+        }
+
+        private AppUser GetUser(string userId)
+        {
+            return _userManager.Users.FirstOrDefault(x => x.Id == userId);
         }
     }
 }

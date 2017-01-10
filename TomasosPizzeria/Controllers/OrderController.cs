@@ -1,14 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using TomasosPizzeria.Infrastructure;
 using TomasosPizzeria.Models;
 using TomasosPizzeria.ViewModels;
 
 namespace TomasosPizzeria.Controllers
 {
+    [Authorize]
     public class OrderController : Controller
     {
         private TomasosContext _tomasosContext;

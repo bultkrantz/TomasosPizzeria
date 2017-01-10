@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using TomasosPizzeria.Infrastructure;
 using TomasosPizzeria.Models;
 using TomasosPizzeria.ViewModels;
 
@@ -44,8 +41,7 @@ namespace TomasosPizzeria.Controllers
                 if (user != null)
                 {
                     await signInManager.SignOutAsync();
-                    Microsoft.AspNetCore.Identity.SignInResult result = await signInManager.PasswordSignInAsync(user,
-                        details.Password, false, false);
+                    Microsoft.AspNetCore.Identity.SignInResult result = await signInManager.PasswordSignInAsync(user, details.Password, false, false);
                     if (result.Succeeded)
                     {
                         return RedirectToAction("Index", "Customer", user);
@@ -92,6 +88,9 @@ namespace TomasosPizzeria.Controllers
         public async Task<IActionResult> Logout()
         {
             await signInManager.SignOutAsync();
+            var cart = GetCart();
+            cart.Clear();
+            SaveCart(cart);
             return RedirectToAction("Index", "Home");
         }
 
@@ -99,6 +98,17 @@ namespace TomasosPizzeria.Controllers
         public IActionResult AccessDenied()
         {
             return View();
+        }
+
+        private Cart GetCart()
+        {
+            Cart cart = HttpContext.Session.GetJson<Cart>("Cart") ?? new Cart();
+            return cart;
+        }
+
+        private void SaveCart(Cart cart)
+        {
+            HttpContext.Session.SetJson("Cart", cart);
         }
     }
 }

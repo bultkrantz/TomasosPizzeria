@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis;
-using Microsoft.EntityFrameworkCore;
 using TomasosPizzeria.Models;
 using TomasosPizzeria.ViewModels;
 
@@ -154,9 +151,8 @@ namespace TomasosPizzeria.Controllers
                         AddErrorsFromResult(validPass);
                     }
                 }
-                if ((validEmail.Succeeded && validPass == null)
-                    || (validEmail.Succeeded
-                        && password != string.Empty && validPass.Succeeded))
+                if (validPass != null && ((validEmail.Succeeded
+                                           && password != string.Empty && validPass.Succeeded)))
                 {
                     IdentityResult result = await userManager.UpdateAsync(user);
                     if (result.Succeeded)

@@ -26,11 +26,11 @@
                     <input class="form-control" asp-for="Matratt.Pris" />
                     <span asp-validation-for="Matratt.Pris"></span>
                 </div>
-             
-                    <label>Välj Kategori</label>
-                    <br />
-                    <select class="form-control" asp-for="Matratt.MatrattTyp" asp-items="@ViewBag.categories"></select>
-              
+
+                <label>Välj Kategori</label>
+                <br />
+                <select class="form-control" asp-for="Matratt.MatrattTyp" asp-items="@ViewBag.categories"></select>
+
                 <hr />
                 <h4>Ingredienser - Markera de ingredienser rätten innehåller</h4>
                 <div id="ingredient-form" class="form-group">
@@ -40,9 +40,42 @@
                     }
                 </div>
             </div>
+            <!-- Trigger the modal with a button -->
+            <a class="btn navbar-btn btn-default" data-toggle="modal" data-target="#shoppingCart">
+                skapa ny ingrediens
+            </a>
             <hr />
             <button class="btn btn-success" type="submit">Skapa</button>
             <a asp-action="Index" asp-controller="Admin" class="btn btn btn-default">Tillbaka</a>
         </form>
+    </div>
+    <!-- Modal -->
+    <div id="shoppingCart" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title text-center">Ny ingrediens</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center">
+                        <h2>Skapa ingrediens</h2>
+                    </div>
+                    <form asp-action="Createingredient">
+                        <div class="form-group">
+                            <label>Ingrediensens namn</label>
+                            <input name="name" class="form-control" type="text" />
+                        </div>
+                        <button class="btn btn-success" type="submit">Skapa</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <div class="input-group">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Stäng</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

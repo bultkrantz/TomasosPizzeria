@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.DotNet.Cli.Utils;
 using TomasosPizzeria.Models;
 
 namespace TomasosPizzeria.ViewModels
@@ -10,12 +7,12 @@ namespace TomasosPizzeria.ViewModels
     public class Cart
     {
         private List<CartLine> _lineCollection = new List<CartLine>();
+        public int RemoveFromTotal { get; set; }
+        public bool FreePizzaUsed { get; set; } = false;
 
         public virtual void AddItem(Matratt matratt, int quantity)
         {
-            CartLine line = _lineCollection
-                .Where(p => p.Matratt.MatrattId == matratt.MatrattId)
-                .FirstOrDefault();
+            CartLine line = _lineCollection.Where(p => p.Matratt.MatrattId == matratt.MatrattId).FirstOrDefault();
 
             if (line == null)
             {
@@ -34,7 +31,7 @@ namespace TomasosPizzeria.ViewModels
         public virtual void RemoveLine(Matratt matratt) =>
         _lineCollection.RemoveAll(l => l.Matratt.MatrattId == matratt.MatrattId);
 
-        public virtual decimal ComputeTotalValue() => _lineCollection.Sum(e => e.Matratt.Pris* e.Quantity);
+        public virtual int ComputeTotalValue() => _lineCollection.Sum(e => e.Matratt.Pris* e.Quantity) - RemoveFromTotal;
         public virtual void Clear() => _lineCollection.Clear();
         public virtual bool ContainsPizza() => _lineCollection.Exists(x => x.Matratt.MatrattTyp == 1 && x.Matratt.Pris > 0);
         public virtual IEnumerable<CartLine> Lines => _lineCollection;

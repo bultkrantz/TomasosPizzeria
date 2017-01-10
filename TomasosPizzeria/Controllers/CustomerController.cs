@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TomasosPizzeria.Models;
 using TomasosPizzeria.ViewModels;
 using Microsoft.AspNetCore.Identity;
-using NuGet.Protocol.Core.v3;
 using TomasosPizzeria.Infrastructure;
 
 
@@ -22,10 +19,10 @@ namespace TomasosPizzeria.Controllers
         private readonly TomasosContext _tomasosContext;
         private UserManager<AppUser> _userManager;
 
-        public CustomerController(TomasosContext tomasosContext, UserManager<AppUser> UserManager)
+        public CustomerController(TomasosContext tomasosContext, UserManager<AppUser> userManager)
         {
             _tomasosContext = tomasosContext;
-            _userManager = UserManager;
+            _userManager = userManager;
         }
 
         public IActionResult Index(AppUser user)
@@ -56,16 +53,17 @@ namespace TomasosPizzeria.Controllers
         }
 
         [HttpPost]
-        public IActionResult SaveChanges(Kund Customer)
+        public async Task<IActionResult> SaveChanges(Kund customer)
         {
             if (ModelState.IsValid)
             {
                 //Kollar om användarnamn eller email är upptagna
-                var oldCustomerInfo = _tomasosContext.Kund.FirstOrDefault(x => x.KundId == Customer.KundId);
-                var usernameTaken = _tomasosContext.Kund.Any(x => x.AnvandarNamn.ToLower() == Customer.AnvandarNamn.ToLower());
-                var emailRegistered = _tomasosContext.Kund.Any(x => x.Email.ToLower() == Customer.Email.ToLower());
-                var usernameNotChanged = Customer.AnvandarNamn == oldCustomerInfo.AnvandarNamn;
-                var emailNotChanged = Customer.Email == oldCustomerInfo.Email;
+                var oldCustomerInfo = _tomasosContext.Kund.FirstOrDefault(x => x.KundId == customer.KundId);
+                var oldPassword = oldCustomerInfo.Losenord;
+                var usernameTaken = _tomasosContext.Kund.Any(x => x.AnvandarNamn.ToLower() == customer.AnvandarNamn.ToLower());
+                var emailRegistered = _tomasosContext.Kund.Any(x => x.Email.ToLower() == customer.Email.ToLower());
+                var usernameNotChanged = customer.AnvandarNamn == oldCustomerInfo.AnvandarNamn;
+                var emailNotChanged = customer.Email == oldCustomerInfo.Email;
 
                 ViewBag.username = usernameTaken ? "Användarnamnet är tyvär upptaget" : null;
 
@@ -82,31 +80,35 @@ namespace TomasosPizzeria.Controllers
 
                 if (usernameTaken == false && emailRegistered == false || usernameNotChanged && emailNotChanged)
                 {
-                    var editedCustomer = _tomasosContext.Kund.FirstOrDefault(x => x.KundId == Customer.KundId);
+                    var editedCustomer = _tomasosContext.Kund.FirstOrDefault(x => x.KundId == customer.KundId);
 
                     if (editedCustomer != null)
                     {
-                        var oldUserInfo = _userManager.Users.FirstOrDefault(x => x.Email == editedCustomer.Email);
+                        var oldUser = _userManager.Users.FirstOrDefault(x => x.CustomerId == editedCustomer.KundId);
 
-                        editedCustomer.KundId = Customer.KundId;
-                        editedCustomer.AnvandarNamn = Customer.AnvandarNamn;
-                        editedCustomer.Bestallning = Customer.Bestallning;
-                        editedCustomer.Email = Customer.Email;
-                        editedCustomer.Gatuadress = Customer.Gatuadress;
-                        editedCustomer.Losenord = Customer.Losenord;
-                        editedCustomer.Namn = Customer.Namn;
-                        editedCustomer.Postnr = Customer.Postnr;
-                        editedCustomer.Postort = Customer.Postort;
-                        editedCustomer.Telefon = Customer.Telefon;
-                        oldUserInfo.Email = editedCustomer.Email;
-                        oldUserInfo.UserName = editedCustomer.AnvandarNamn;
-                        _userManager.UpdateAsync(oldUserInfo);
+                        editedCustomer.KundId = customer.KundId;
+                        editedCustomer.AnvandarNamn = customer.AnvandarNamn;
+                        editedCustomer.Bestallning = customer.Bestallning;
+                        editedCustomer.Email = customer.Email;
+                        editedCustomer.Gatuadress = customer.Gatuadress;
+                        editedCustomer.Losenord = customer.Losenord;
+                        editedCustomer.Namn = customer.Namn;
+                        editedCustomer.Postnr = customer.Postnr;
+                        editedCustomer.Postort = customer.Postort;
+                        editedCustomer.Telefon = customer.Telefon;
+
+                        oldUser.Email = editedCustomer.Email;
+                        oldUser.UserName = editedCustomer.AnvandarNamn;
+                        await _userManager.ChangePasswordAsync(oldUser, oldPassword, editedCustomer.Losenord);
+                        await _userManager.UpdateAsync(oldUser);
+
                         _tomasosContext.Kund.Update(editedCustomer);
                         _tomasosContext.SaveChanges();
+
                         var loggedInModel = new LoggedInModel()
                         {
                             Customer = editedCustomer,
-                            UserInfo = oldUserInfo,
+                            UserInfo = oldUser,
                             Pizza = null,
                             Pasta = null,
                             Sallad = null
@@ -117,7 +119,6 @@ namespace TomasosPizzeria.Controllers
                     }
                 }
             }
-            //TODO måste returnera en LoggedInModel
             return View("Edit");
         }
 

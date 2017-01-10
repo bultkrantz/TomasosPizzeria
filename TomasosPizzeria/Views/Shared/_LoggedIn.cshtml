@@ -1,13 +1,10 @@
-﻿@using System.Security.Cryptography.X509Certificates
-@model TomasosPizzeria.ViewModels.LoggedInModel
-
+﻿@model LoggedInModel
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - TomasosPizzeria</title>
-
     <environment names="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
         <link rel="stylesheet" href="~/css/site.css" />
@@ -23,7 +20,6 @@
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
 </head>
 <body>
-
     <div class="header">
         <div class="container">
             <div class="col-md-8">
@@ -32,7 +28,6 @@
             </div>
         </div>
     </div>
-
     <nav class="navbar navbar-default main-nav">
         <div class="container-fluid">
             <div class="navbar-header">
@@ -66,12 +61,9 @@
         </div>
     </nav>
 
-
-
     <!-- Modal -->
     <div id="shoppingCart" class="modal fade" role="dialog">
         <div class="modal-dialog">
-
             <!-- Modal content-->
             <div class="modal-content">
                 <div class="modal-header">
@@ -101,8 +93,14 @@
                                         @{
                                             var sum = line.Matratt.Pris * line.Quantity;
                                             @sum
-                                        } Kr
+                                        } Kr 
+                                        <br/>
+                                        @if (Model.Customer.GratisPizza > 0 && line.Matratt.MatrattTyp == 1 && Model.Cart.FreePizzaUsed != true)
+                                        {
+                                            <a asp-controller="Cart" asp-action="UseFreePizza" asp-route-userId="@Model.UserInfo.Id" asp-route-pizzaId="@line.Matratt.MatrattId" class="btn btn-primary">Använd gratis pizza bonus</a>
+                                        }
                                     </td>
+
                                 </tr>
                                                 }
                                             }
@@ -113,9 +111,9 @@
                         {
                             var orderTotal = @Model.Cart.ComputeTotalValue();
                             <h1 class="text-center">Ordertotal: @orderTotal Kr</h1>
-                            if (@Model.Customer.GratisPizza > 0 && @Model.Cart.ContainsPizza())
+                            if (@Model.Cart.FreePizzaUsed)
                             {
-                                <a asp-controller="Cart" asp-action="UseFreePizza" asp-route-id="@Model.UserInfo.Id" class="btn btn-primary">Använd gratis pizza bonus</a>
+                                <h3 class="text-center">Du får en gratis pizza värd @Model.Cart.RemoveFromTotal Kr</h3>
                             }
                         }
                         else
@@ -123,10 +121,10 @@
                             <h1>Varukorgen är tom</h1>
                         }
                     }
-
                 </div>
                 <div class="modal-footer">
-                    <div class="input-group"><button type="button" class="btn btn-default" data-dismiss="modal">Stäng</button>
+                    <div class="input-group">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Stäng</button>
                         <a class="btn btn-primary" asp-controller="Cart" asp-action="CreateOrder" asp-route-id="@Model.Customer.KundId" method="post">
                             Skicka beställning
                         </a>
@@ -144,7 +142,6 @@
             </footer>
         </div>
     </div>
-
     <environment names="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>
         <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
@@ -161,7 +158,6 @@
         </script>
         <script src="~/js/site.min.js" asp-append-version="true"></script>
     </environment>
-
     @RenderSection("scripts", required: false)
 </body>
 </html>

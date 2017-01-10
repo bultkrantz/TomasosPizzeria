@@ -1,4 +1,4 @@
-﻿@model TomasosPizzeria.ViewModels.LoggedInModel
+﻿@model LoggedInModel
 @{
     Layout = "_LoggedIn";
 }
@@ -9,9 +9,8 @@
         <h2>Välkommen till Tomasos @Model.Customer.Namn</h2>
         @if (@User.IsInRole("PremiumUser"))
         {
-            <h3>Vid 100 poäng får du en gratis pizza vid beställning, varje maträtt du köper ger 10 poäng i vårt bonussystem</h3>
+            <p>Vid 100 poäng får du en gratis pizza vid nästa beställning, varje maträtt du köper ger 10 poäng i vårt bonussystem, Du kan sedan använda 1 gratis pizza per beställning</p>
         }
-        <p>Nedanför hittar du våran meny, klicka på en maträtt för att lägga till den i din varukorg</p>
     </div>
 }
 else

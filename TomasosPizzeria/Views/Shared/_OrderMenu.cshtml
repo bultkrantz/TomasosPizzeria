@@ -1,193 +1,155 @@
-﻿@model TomasosPizzeria.ViewModels.LoggedInModel
+﻿@model LoggedInModel
 
 <div class="row">
     <div class="col-md-6">
-        <div class="panel-group">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <div class="panel-title text-center">
-                        <a data-toggle="collapse" href="#collapse1"><h2>Pizza</h2></a>
-                    </div>
-                </div>
-                <div id="collapse1" class="panel-collapse collapse">
-                    <div class="panel-body">
-                        <table class="table table-bordered table-striped table-hover">
-                            <thead>
-                                <tr>
-                                    <th><h4>Namn</h4></th>
-                                    <th><h4>Ingredienser</h4></th>
-                                    <th><h4>Beskrivning</h4></th>
-                                    <th><h4>Pris</h4></th>
-                                </tr>
-                            </thead>
-                            @foreach (var food in @Model.Pizza)
+        <table class="table table-bordered table-striped table-hover">
+            <thead>
+                <tr>
+                    <th><h4>Namn</h4></th>
+                    <th><h4>Ingredienser</h4></th>
+                    <th><h4>Beskrivning</h4></th>
+                    <th><h4>Pris</h4></th>
+                </tr>
+            </thead>
+            @foreach (var food in @Model.Pizza)
+            {
+                <tr>
+                    <td>
+                        <form class="navbar-form text-center" asp-controller="Cart" asp-action="AddToCart" method="post">
+                            <input type="hidden" name="customerId" value="@Model.UserInfo.Id" />
+                            <input type="hidden" name="matrattId" value="@food.Matratt.MatrattId" />
+                            @if (@Model.Cart != null)
                             {
-                                <tr>
-                                    <td>
-                                        <form class="navbar-form text-center" asp-controller="Cart" asp-action="AddToCart" method="post">
-                                            <input type="hidden" name="customerId" value="@Model.UserInfo.Id" />
-                                            <input type="hidden" name="matrattId" value="@food.Matratt.MatrattId" />
-                                            @if (@Model.Cart != null)
-                                            {
-                                                foreach (var i in @Model.Cart.Lines)
-                                                {
-                                                    <input type="hidden" name="shoppingCart" value="@i.Matratt.MatrattId" />
-                                                }
-                                            }
-                                            <button class="btn btn-menu" id="addToCart" type="submit">@food.Matratt.MatrattNamn</button>
-                                        </form>
-                                    </td>
-                                    <td>
-                                        @for (var index = 0; index < food.Produkter.Count; index++)
-                                        {
-                                            var produkt = food.Produkter[index];
-                                            if (index < food.Produkter.Count - 1)
-                                            {
-                                                var nameAndSeparator = produkt.ProduktNamn + ", ";
-                                                @nameAndSeparator
-                                            }
-                                            else
-                                            {
-                                                var onlyName = produkt.ProduktNamn;
-                                                @onlyName
-                                            }
-                                        }
-                                    </td>
-                                    <td>@food.Matratt.Beskrivning</td>
-                                    <td>@food.Matratt.Pris kr</td>
-                                </tr>
+                                foreach (var i in @Model.Cart.Lines)
+                                {
+                                    <input type="hidden" name="shoppingCart" value="@i.Matratt.MatrattId" />
+                                }
                             }
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
+                            <button class="btn btn-menu" id="addToCart" type="submit">@food.Matratt.MatrattNamn</button>
+                        </form>
+                    </td>
+                    <td>
+                        @for (var index = 0; index < food.Produkter.Count; index++)
+                        {
+                            var produkt = food.Produkter[index];
+                            if (index < food.Produkter.Count - 1)
+                            {
+                                var nameAndSeparator = produkt.ProduktNamn + ", ";
+                                @nameAndSeparator
+                            }
+                            else
+                            {
+                                var onlyName = produkt.ProduktNamn;
+                                @onlyName
+                            }
+                        }
+                    </td>
+                    <td>@food.Matratt.Beskrivning</td>
+                    <td>@food.Matratt.Pris kr</td>
+                </tr>
+            }
+        </table>
     </div>
 
     <div class="col-md-6">
-        <div class="panel-group">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <div class="panel-title text-center">
-                        <a data-toggle="collapse" href="#collapse2"><h2>Pasta</h2></a>
-                    </div>
-                </div>
-                <div id="collapse2" class="panel-collapse collapse">
-                    <div class="panel-body">
-                        <table class="table table-bordered table-striped table-hover">
-                            <thead>
-                                <tr>
-                                    <th>Namn</th>
-                                    <th>Ingredienser</th>
-                                    <th>Beskrivning</th>
-                                    <th>Pris</th>
-                                </tr>
-                            </thead>
-                            @foreach (var food in @Model.Pasta)
+        <table class="table table-bordered table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>Namn</th>
+                    <th>Ingredienser</th>
+                    <th>Beskrivning</th>
+                    <th>Pris</th>
+                </tr>
+            </thead>
+            @foreach (var food in @Model.Pasta)
+            {
+                <tr>
+                    <td>
+                        <form class="navbar-form text-center" asp-controller="Cart" asp-action="AddToCart" method="post">
+                            <input type="hidden" name="customerId" value="@Model.UserInfo.Id" />
+                            <input type="hidden" name="matrattId" value="@food.Matratt.MatrattId" />
+                            @if (@Model.Cart != null)
                             {
-                                <tr>
-                                    <td>
-                                        <form class="navbar-form text-center" asp-controller="Cart" asp-action="AddToCart" method="post">
-                                            <input type="hidden" name="customerId" value="@Model.UserInfo.Id" />
-                                            <input type="hidden" name="matrattId" value="@food.Matratt.MatrattId" />
-                                            @if (@Model.Cart != null)
-                                            {
-                                                foreach (var i in @Model.Cart.Lines)
-                                                {
-                                                    <input type="hidden" name="shoppingCart" value="@i.Matratt.MatrattId" />
-                                                }
-                                            }
-                                            <button class="btn btn-menu" id="addToCart" type="submit">@food.Matratt.MatrattNamn</button>
-                                        </form>
-                                    </td>
-                                    <td>
-                                        @for (var index = 0; index < food.Produkter.Count; index++)
-                                        {
-                                            var produkt = food.Produkter[index];
-                                            if (index < food.Produkter.Count - 1)
-                                            {
-                                                var nameAndSeparator = produkt.ProduktNamn + ", ";
-                                                @nameAndSeparator
-                                            }
-                                            else
-                                            {
-                                                var onlyName = produkt.ProduktNamn;
-                                                @onlyName
-                                            }
-                                        }
-                                    </td>
-                                    <td>@food.Matratt.Beskrivning</td>
-                                    <td>@food.Matratt.Pris kr</td>
-                                </tr>
+                                foreach (var i in @Model.Cart.Lines)
+                                {
+                                    <input type="hidden" name="shoppingCart" value="@i.Matratt.MatrattId" />
+                                }
                             }
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
+                            <button class="btn btn-menu" id="addToCart" type="submit">@food.Matratt.MatrattNamn</button>
+                        </form>
+                    </td>
+                    <td>
+                        @for (var index = 0; index < food.Produkter.Count; index++)
+                        {
+                            var produkt = food.Produkter[index];
+                            if (index < food.Produkter.Count - 1)
+                            {
+                                var nameAndSeparator = produkt.ProduktNamn + ", ";
+                                @nameAndSeparator
+                            }
+                            else
+                            {
+                                var onlyName = produkt.ProduktNamn;
+                                @onlyName
+                            }
+                        }
+                    </td>
+                    <td>@food.Matratt.Beskrivning</td>
+                    <td>@food.Matratt.Pris kr</td>
+                </tr>
+            }
+        </table>
     </div>
 </div>
+
 <div class="row">
     <div class="col-md-6">
-        <div class="panel-group">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <div class="panel-title text-center">
-                        <a data-toggle="collapse" href="#collapse3"><h2>Sallad</h2></a>
-                    </div>
-                </div>
-                <div id="collapse3" class="panel-collapse collapse">
-                    <div class="panel-body">
-                        <table class="table table-bordered table-striped table-hover">
-                            <thead>
-                                <tr>
-                                    <th>Namn</th>
-                                    <th>Ingredienser</th>
-                                    <th>Beskrivning</th>
-                                    <th>Pris</th>
-                                </tr>
-                            </thead>
-                            @foreach (var food in @Model.Sallad)
+        <table class="table table-bordered table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>Namn</th>
+                    <th>Ingredienser</th>
+                    <th>Beskrivning</th>
+                    <th>Pris</th>
+                </tr>
+            </thead>
+            @foreach (var food in @Model.Sallad)
+            {
+                <tr>
+                    <td>
+                        <form class="navbar-form text-center" asp-controller="Cart" asp-action="AddToCart" method="post">
+                            <input type="hidden" name="customerId" value="@Model.UserInfo.Id" />
+                            <input type="hidden" name="matrattId" value="@food.Matratt.MatrattId" />
+                            @if (@Model.Cart != null)
                             {
-                                <tr>
-                                    <td>
-                                        <form class="navbar-form text-center" asp-controller="Cart" asp-action="AddToCart" method="post">
-                                            <input type="hidden" name="customerId" value="@Model.UserInfo.Id" />
-                                            <input type="hidden" name="matrattId" value="@food.Matratt.MatrattId" />
-                                            @if (@Model.Cart != null)
-                                            {
-                                                foreach (var i in @Model.Cart.Lines)
-                                                {
-                                                    <input type="hidden" name="shoppingCart" value="@i.Matratt.MatrattId" />
-                                                }
-                                            }
-                                            <button class="btn btn-menu" id="addToCart" type="submit">@food.Matratt.MatrattNamn</button>
-                                        </form>
-                                    </td>
-                                    <td>
-                                        @for (var index = 0; index < food.Produkter.Count; index++)
-                                        {
-                                            var produkt = food.Produkter[index];
-                                            if (index < food.Produkter.Count - 1)
-                                            {
-                                                var nameAndSeparator = produkt.ProduktNamn + ", ";
-                                                @nameAndSeparator
-                                            }
-                                            else
-                                            {
-                                                var onlyName = produkt.ProduktNamn;
-                                                @onlyName
-                                            }
-                                        }
-                                    </td>
-                                    <td>@food.Matratt.Beskrivning</td>
-                                    <td>@food.Matratt.Pris kr</td>
-                                </tr>
+                                foreach (var i in @Model.Cart.Lines)
+                                {
+                                    <input type="hidden" name="shoppingCart" value="@i.Matratt.MatrattId" />
+                                }
                             }
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
+                            <button class="btn btn-menu" id="addToCart" type="submit">@food.Matratt.MatrattNamn</button>
+                        </form>
+                    </td>
+                    <td>
+                        @for (var index = 0; index < food.Produkter.Count; index++)
+                        {
+                            var produkt = food.Produkter[index];
+                            if (index < food.Produkter.Count - 1)
+                            {
+                                var nameAndSeparator = produkt.ProduktNamn + ", ";
+                                @nameAndSeparator
+                            }
+                            else
+                            {
+                                var onlyName = produkt.ProduktNamn;
+                                @onlyName
+                            }
+                        }
+                    </td>
+                    <td>@food.Matratt.Beskrivning</td>
+                    <td>@food.Matratt.Pris kr</td>
+                </tr>
+            }
+        </table>
     </div>
 </div>

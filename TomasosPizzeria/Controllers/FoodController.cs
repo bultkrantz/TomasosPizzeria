@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using TomasosPizzeria.Models;
 using TomasosPizzeria.ViewModels;
 
@@ -19,9 +15,9 @@ namespace TomasosPizzeria.Controllers
     {
         private TomasosContext _tomasosContext;
 
-        public FoodController(TomasosContext TomasosContext)
+        public FoodController(TomasosContext tomasosContext)
         {
-            _tomasosContext = TomasosContext;
+            _tomasosContext = tomasosContext;
         }
 
         public IActionResult Edit(int id)
@@ -107,7 +103,6 @@ namespace TomasosPizzeria.Controllers
         public IActionResult Delete(int id)
         {
             var foodToRemove = _tomasosContext.Matratt.FirstOrDefault(x => x.MatrattId == id);
-            var ingredientsToRemove = _tomasosContext.MatrattTyp.Where(x => x.MatrattTyp1 == foodToRemove.MatrattTyp).ToList();
 
             _tomasosContext.Matratt.Remove(foodToRemove);
             _tomasosContext.SaveChanges();
@@ -150,23 +145,22 @@ namespace TomasosPizzeria.Controllers
             return RedirectToAction("Index", "Admin");
         }
 
-        public IActionResult CreateIngredient()
-        {
-            var vm = new EditIngredientModel()
-            {
-                Produkt = new Produkt(),
-                Produkter = _tomasosContext.Produkt.ToList()
-            };
-            ViewBag.products = _tomasosContext.Produkt.ToList();
-            return View(vm);
-        }
+        //public IActionResult CreateIngredient()
+        //{
+        //    var vm = new EditIngredientModel()
+        //    {
+        //        Produkt = new Produkt(),
+        //        Produkter = _tomasosContext.Produkt.ToList()
+        //    };
+        //    ViewBag.products = _tomasosContext.Produkt.ToList();
+        //    return View(vm);
+        //}
 
-        [HttpPost]
-        public IActionResult Createingredient(Produkt produkt)
+        public IActionResult Createingredient(string name)
         {
             var ingredient = new Produkt()
             {
-                ProduktNamn = produkt.ProduktNamn
+                ProduktNamn = name
             };
             _tomasosContext.Produkt.Add(ingredient);
             _tomasosContext.SaveChanges();
@@ -174,7 +168,7 @@ namespace TomasosPizzeria.Controllers
             ViewBag.products = _tomasosContext.Produkt.ToList();
 
             TempData["success"] = "Ny ingrediens skapad";
-            return View();
+            return RedirectToAction("CreateFood");
         }
 
         [HttpPost]

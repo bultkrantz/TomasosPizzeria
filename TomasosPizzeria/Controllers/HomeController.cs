@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using TomasosPizzeria.Models;
@@ -42,31 +41,17 @@ namespace TomasosPizzeria.Controllers
             {
                 var userNameTaken = _tomasosContext.Kund.FirstOrDefault(x => x.AnvandarNamn.ToLower() == kund.AnvandarNamn.ToLower());
                 var emailRegistered = _tomasosContext.Kund.FirstOrDefault(x => x.Email.ToLower() == kund.Email.ToLower());
-
                 ViewBag.username = userNameTaken != null ? "Användarnamnet är tyvär upptaget" : null;
 
                 ViewBag.email = emailRegistered != null ? "Emailen är redan registrerad" : null;
 
                 if (userNameTaken == null && emailRegistered == null)
                 {
-                    AppUser user = new AppUser()
-                    {
-                        UserName = kund.AnvandarNamn,
-                        Email = kund.Email,
-                        CustomerId = kund.KundId
-                    };
-                    IdentityResult useResult = await _userManagager.CreateAsync(user, kund.Losenord);
-                    IdentityResult roleResult = await _userManagager.AddToRoleAsync(user, "RegularUser");
-
-                    if (useResult.Succeeded && roleResult.Succeeded)
-                    {
-                        ViewBag.username = null;
-                        ViewBag.email = null;
-                        _tomasosContext.Kund.Add(kund);
-                        _tomasosContext.SaveChanges();
-                        ModelState.Clear();
-                        TempData["success"] = "Användare skapad";
-                    }
+                    ViewBag.username = null;
+                    ViewBag.email = null;
+                    await CreateCustomer(kund);
+                    ModelState.Clear();
+                    TempData["success"] = "Användare skapad";
                 }
             }
             return View();
@@ -95,6 +80,32 @@ namespace TomasosPizzeria.Controllers
                 foodModels.Add(foodModel);
             }
             return foodModels;
+        }
+
+        private async Task<Kund> CreateCustomer(Kund kund)
+        {
+            var customer = new Kund()
+            {
+                AnvandarNamn = kund.AnvandarNamn,
+                Email = kund.Email,
+                Gatuadress = kund.Gatuadress,
+                Losenord = kund.Losenord,
+                Namn = kund.Namn,
+                Postnr = kund.Postnr,
+                Postort = kund.Postort,
+                Telefon = kund.Telefon
+            };
+            _tomasosContext.Kund.Add(customer);
+            _tomasosContext.SaveChanges();
+            var user = new AppUser()
+            {
+                UserName = customer.AnvandarNamn,
+                Email = customer.Email,
+                CustomerId = customer.KundId
+            };
+            await _userManagager.CreateAsync(user, kund.Losenord);
+            await _userManagager.AddToRoleAsync(user, "RegularUser");
+            return customer;
         }
     }
 }
