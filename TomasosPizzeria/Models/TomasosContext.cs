@@ -1,10 +1,15 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace TomasosPizzeria.Models
 {
-    public partial class TomasosContext : DbContext
+    public class TomasosContext : IdentityDbContext<AppUser>
     {
+        public TomasosContext(DbContextOptions options) : base(options)
+        {
+            
+        }
         public virtual DbSet<Bestallning> Bestallning { get; set; }
         public virtual DbSet<BestallningMatratt> BestallningMatratt { get; set; }
         public virtual DbSet<Kund> Kund { get; set; }
@@ -20,6 +25,8 @@ namespace TomasosPizzeria.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<Bestallning>(entity =>
             {
                 entity.Property(e => e.BestallningId).HasColumnName("BestallningID");

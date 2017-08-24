@@ -8,9 +8,10 @@ using TomasosPizzeria.Models;
 namespace TomasosPizzeria.Migrations.Tomasos
 {
     [DbContext(typeof(TomasosContext))]
-    partial class TomasosContextModelSnapshot : ModelSnapshot
+    [Migration("20170112114744_AddedIdentityToTOmasos3")]
+    partial class AddedIdentityToTOmasos3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.0.0-rtm-21431")

@@ -241,7 +241,10 @@ C:\Users\Marcus\Source\Repos\TomasosPizzeria3\TomasosPizzeria\Migrations\2017010
 C:\Users\Marcus\Source\Repos\TomasosPizzeria3\TomasosPizzeria\Migrations\20170104204346_GratisPizzaPropp2.Designer.cs
 C:\Users\Marcus\Source\Repos\TomasosPizzeria3\TomasosPizzeria\Migrations\20170104204539_GratisPizzaPropp3.cs
 C:\Users\Marcus\Source\Repos\TomasosPizzeria3\TomasosPizzeria\Migrations\20170104204539_GratisPizzaPropp3.Designer.cs
+C:\Users\Marcus\Source\Repos\TomasosPizzeria3\TomasosPizzeria\Migrations\20170112120128_AddedIdentityToTOmasos4.cs
+C:\Users\Marcus\Source\Repos\TomasosPizzeria3\TomasosPizzeria\Migrations\20170112120128_AddedIdentityToTOmasos4.Designer.cs
 C:\Users\Marcus\Source\Repos\TomasosPizzeria3\TomasosPizzeria\Migrations\AppIdentityDbContextModelSnapshot.cs
+C:\Users\Marcus\Source\Repos\TomasosPizzeria3\TomasosPizzeria\Migrations\TomasosContextModelSnapshot.cs
 C:\Users\Marcus\Source\Repos\TomasosPizzeria3\TomasosPizzeria\Migrations\Tomasos\20170101215319_DeleteOnCascade.cs
 C:\Users\Marcus\Source\Repos\TomasosPizzeria3\TomasosPizzeria\Migrations\Tomasos\20170101215319_DeleteOnCascade.Designer.cs
 C:\Users\Marcus\Source\Repos\TomasosPizzeria3\TomasosPizzeria\Migrations\Tomasos\20170101220622_DeleteOnCascade2.cs
@@ -266,6 +269,12 @@ C:\Users\Marcus\Source\Repos\TomasosPizzeria3\TomasosPizzeria\Migrations\Tomasos
 C:\Users\Marcus\Source\Repos\TomasosPizzeria3\TomasosPizzeria\Migrations\Tomasos\20170104213126_GratisPizzaProppTillInt.Designer.cs
 C:\Users\Marcus\Source\Repos\TomasosPizzeria3\TomasosPizzeria\Migrations\Tomasos\20170104213543_GratisPizzaProppTillInt2.cs
 C:\Users\Marcus\Source\Repos\TomasosPizzeria3\TomasosPizzeria\Migrations\Tomasos\20170104213543_GratisPizzaProppTillInt2.Designer.cs
+C:\Users\Marcus\Source\Repos\TomasosPizzeria3\TomasosPizzeria\Migrations\Tomasos\20170112110814_AddedIdentityToTOmasos.cs
+C:\Users\Marcus\Source\Repos\TomasosPizzeria3\TomasosPizzeria\Migrations\Tomasos\20170112110814_AddedIdentityToTOmasos.Designer.cs
+C:\Users\Marcus\Source\Repos\TomasosPizzeria3\TomasosPizzeria\Migrations\Tomasos\20170112112643_AddedIdentityToTOmasos2.cs
+C:\Users\Marcus\Source\Repos\TomasosPizzeria3\TomasosPizzeria\Migrations\Tomasos\20170112112643_AddedIdentityToTOmasos2.Designer.cs
+C:\Users\Marcus\Source\Repos\TomasosPizzeria3\TomasosPizzeria\Migrations\Tomasos\20170112114744_AddedIdentityToTOmasos3.cs
+C:\Users\Marcus\Source\Repos\TomasosPizzeria3\TomasosPizzeria\Migrations\Tomasos\20170112114744_AddedIdentityToTOmasos3.Designer.cs
 C:\Users\Marcus\Source\Repos\TomasosPizzeria3\TomasosPizzeria\Migrations\Tomasos\TomasosContextModelSnapshot.cs
 C:\Users\Marcus\Source\Repos\TomasosPizzeria3\TomasosPizzeria\Models\AppIdentityDbContext.cs
 C:\Users\Marcus\Source\Repos\TomasosPizzeria3\TomasosPizzeria\Models\AppUser.cs

@@ -1,0 +1,19 @@
+﻿@model List<TomasosPizzeria.ViewModels.FoodModel>
+
+
+@{
+    Layout = null;
+}
+
+@foreach (var vm in @Model)
+{
+    <p>@vm.Matratt.MatrattNamn</p>
+
+    foreach (var produkt in vm.Produkter)
+    {
+        <p>@produkt.ProduktNamn</p>
+    }
+
+    <hr/>
+    <hr/>
+}

@@ -40,24 +40,8 @@ namespace TomasosPizzeria
 
             services.AddDbContext<TomasosContext>(options => options.UseSqlServer(Configuration["Data:Tomasos:ConnectionString"]));
 
-            services.AddDbContext<AppIdentityDbContext>(options => options.UseSqlServer(Configuration["Data:TomasosIdentity:ConnectionString"]));
-
-            services.AddIdentity<AppUser, IdentityRole>(opts =>
-                {
-                    //Om användaren inte är autentierad skickas man till loginsidan igen
-                    opts.Cookies.ApplicationCookie.LoginPath = "/Account/Login";
-                    //Options för hur användarnamn skall valideras
-                    opts.User.RequireUniqueEmail = true;
-
-                    //Options för hur lösenord skall valideras
-                    opts.Password.RequiredLength = 6;
-                    opts.Password.RequireNonAlphanumeric = false;
-                    opts.Password.RequireLowercase = false;
-                    opts.Password.RequireUppercase = false;
-                    opts.Password.RequireDigit = false;
-                })
-                .AddEntityFrameworkStores<AppIdentityDbContext>();
-
+            services.AddIdentity<AppUser, IdentityRole>().AddEntityFrameworkStores<TomasosContext>();
+           
             services.AddMemoryCache();
 
             services.AddSession();
@@ -83,11 +67,17 @@ namespace TomasosPizzeria
             }
 
             app.UseApplicationInsightsExceptionTelemetry();
+
             app.UseStaticFiles();
+
             app.UseStatusCodePages();
+
             app.UseDeveloperExceptionPage();
+
             app.UseSession();
+
             app.UseIdentity();
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
